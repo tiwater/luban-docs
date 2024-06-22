@@ -1,6 +1,6 @@
 {
-  "name": "luban-website",
-  "version": "0.0.0",
+  "name": "luban-docs",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
