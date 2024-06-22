@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkluban_docs=self.webpackChunkluban_docs||[]).push([[8121],{8070:e=>{e.exports=JSON.parse('{"tags":[{"label":"fourier","permalink":"/blog/tags/fourier","count":1},{"label":"robot","permalink":"/blog/tags/robot","count":1},{"label":"developer","permalink":"/blog/tags/developer","count":1}]}')}}]);
