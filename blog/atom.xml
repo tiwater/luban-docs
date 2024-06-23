@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://developer.fftai.dev/blog</id>
-    <title>Fourier Developer Blog</title>
+    <title>Fourier Builder Blog</title>
     <updated>2024-07-01T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://developer.fftai.dev/blog"/>
-    <subtitle>Fourier Developer Blog</subtitle>
+    <subtitle>Fourier Builder Blog</subtitle>
     <icon>https://developer.fftai.dev/img/logo.png</icon>
     <entry>
         <title type="html"><![CDATA[Announcing Fourier Builder]]></title>
