@@ -85,6 +85,10 @@ const config: Config = {
           label: 'Blog',
         },
         {
+          href: 'https://builder.fftai.dev',
+          label: 'Builder',
+          position: 'right',
+        },        {
           href: 'https://github.com/fftai',
           'aria-label': 'GitHub repository',
           className: 'header-github-link',
