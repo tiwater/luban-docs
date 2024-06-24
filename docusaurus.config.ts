@@ -3,7 +3,7 @@ import type { Config } from '@docusaurus/types';
 import { themes as prismThemes } from 'prism-react-renderer';
 
 const config: Config = {
-  title: 'Fourier Developer',
+  title: 'Fourier Builder',
   tagline: 'Design Your Own Robots, Visually and Effortlessly',
   favicon: 'img/logo.png',
 
