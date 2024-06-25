@@ -1,0 +1,48 @@
+---
+sidebar_position: 5
+---
+
+# Workflow for Robot
+
+The previous workflow we built is a simple "Hello World" workflow. In this section, we will build a more complex workflow that make a humanoid robot listen, think, speak and act.
+
+## Workflow Overview
+
+The workflow consists of the following steps:
+
+1. **Start**: The workflow starts with a trigger node.
+2. **Move Forward**: The robot moves forward for 2 seconds.
+3. **Move Backward**: The robot moves backward for 2 seconds.
+4. **End**: The workflow ends.
+
+## Build Workflow
+
+1. **Create New Project**: Click the `New Project` button to create a new project.
+2. **Add Nodes**: Add the following nodes to the workflow:
+
+   - **Trigger Node**: The workflow starts with a trigger node.
+   - **Move Forward Node**: The robot moves forward for 2 seconds.
+   - **Move Backward Node**: The robot moves backward for 2 seconds.
+
+3. **Connect Nodes**: Connect the nodes in the following order:
+
+   - **Trigger Node** -> **Move Forward Node** -> **Move Backward Node**.
+
+4. **Configure Nodes**:
+
+   - **Move Forward Node**: Set the duration to 2 seconds.
+   - **Move Backward Node**: Set the duration to 2 seconds.
+
+## Test Workflow with Simulation
+
+Simulation is an important feature for robot development. It allows you to test your workflow without deploying it to the robot. You can see how the robot moves and interacts with its environment in real-time. It's not only convenient but also safe. Sometimes flawed program can cause damages to the robot, simulation can help you avoid this risk. Or unexpected robot behavior will cause accident such as hurting people, simulation can help you avoid this risk.
+
+1. **Enable Simulation**: Click the `Simulation` tab in the `Properties Pane` to enable the simulation feature, and then click the **Enable Simulation** button to start the simulation. Please wait for a moment, the simulation environment will be loaded.
+
+2. **Run Workflow**: Click the `Run` button to run the workflow in the simulation environment. You will see the robot moving forward and backward in the simulation.
+
+Because the simulation does not support interaction features other than moving, you can only see the robot moving forward and backward. In the real environment, the robot will move forward and backward as expected, and can listen and talk. Because the interaction features are not risky, we can test it directly on the robot.
+
+## Next Steps
+
+Now we get a workflow that controls the robot to move forward and backward. In the next section, we will deploy the workflow to the robot and run it in the production environment.
