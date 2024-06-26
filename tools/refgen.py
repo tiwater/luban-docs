@@ -33,21 +33,21 @@ with open(static_category_json_path, 'w', encoding='utf-8') as json_file:
 
 # Function to escape necessary characters for markdown
 def escape_markdown_chars(text):
-    return text.replace('{', '&#123;').replace('}', '&#125;').replace('\n', ' ').replace('`', '\\`').replace('|', '\\|')
+    return text.replace('{{', '&#123;&#123;').replace('}}', '&#125;&#125;').replace('{', '&#123;').replace('}', '&#125;').replace('\n', '  \n').replace('`', '\\`').replace('|', '\\|')
 
 # Function to generate MDX content for a node
 def generate_mdx_content(node, slug):
     mdx_content = f"---\nid: {node['id']}\nslug: {slug}\n---\n\n"
     mdx_content += f"# {node['template']['name']}\n\n"
-    mdx_content += f"**Description**: {node['template']['description']}\n\n"
-    mdx_content += f"**Type**: {node['type']}\n\n"
+    mdx_content += f"**Description**: {escape_markdown_chars(node['template']['description'])}\n\n"
+    mdx_content += f"**Type**: {escape_markdown_chars(node['type'])}\n\n"
     
     if 'inputs' in node['template']:
         mdx_content += "## Inputs\n\n"
         mdx_content += "| Name | Type | Description |\n| --- | --- | --- |\n"
         for input in node['template']['inputs']:
             input_type = input.get('type', 'Unknown')
-            mdx_content += f"| **{input['name']}** | {input_type} | {escape_markdown_chars(input['description'])} |\n"
+            mdx_content += f"| **{escape_markdown_chars(input['name'])}** | {escape_markdown_chars(input_type)} | {escape_markdown_chars(input['description'])} |\n"
 
     if 'outputs' in node['template']:
         mdx_content += "## Outputs\n\n"
@@ -55,7 +55,7 @@ def generate_mdx_content(node, slug):
         for output in node['template']['outputs']:
             output_type = output.get('type', 'Unknown')
             description = escape_markdown_chars(output['description'])
-            mdx_content += f"| **{output['name']}** | {output_type} | {description} |\n"
+            mdx_content += f"| **{escape_markdown_chars(output['name'])}** | {escape_markdown_chars(output_type)} | {description} |\n"
 
     if 'options' in node['template']:
         mdx_content += "## Options\n\n"
@@ -63,7 +63,7 @@ def generate_mdx_content(node, slug):
         for option in node['template']['options']:
             option_type = option.get('type', 'Unknown')
             description = escape_markdown_chars(option.get('description', 'No description provided'))
-            mdx_content += f"| **{option['name']}** | {option_type} | {description} |\n"
+            mdx_content += f"| **{escape_markdown_chars(option['name'])}** | {escape_markdown_chars(option_type)} | {description} |\n"
 
     return mdx_content
 
