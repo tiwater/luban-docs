@@ -28,7 +28,5 @@ slug: llm
 | **Model** | text | Model |
 | **Temperature** | number | Temperature |
 | **Event Output** | boolean | If enabled, the received content will be organized based on punctuation and added to the event queue, thereby achieving rapid feedback. Otherwise, it will wait for the LLM to complete its output and return it as a single string. |
-| **Event Queue** | text | ```json
-"Variable name of the event queue. The LLM event format is: \n&#123;\n\"name\":\"llmEvent\",\n\"timestamp\": number,\n\"parameters\"&#123;\n\"text\":\"Text content of the LLM response\",\n\"isEnd\": boolean\n&#125;\n&#125;.\nThe timestamp is the time when the request was initiated. Therefore, events generated within a single request will have the same timestamp."
-``` |
+| **Event Queue** | text | Variable name of the event queue. The LLM event format is:  &#123; "name":"llmEvent", "timestamp": number, "parameters"&#123; "text":"Text content of the LLM response", "isEnd": boolean &#125; &#125;. The timestamp is the time when the request was initiated. Therefore, events generated within a single request will have the same timestamp. |
 | **NodeLogic** | any | Node logic |
