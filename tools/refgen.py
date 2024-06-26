@@ -36,11 +36,15 @@ def escape_json_for_mdx(json_content):
     json_str = json.dumps(json_content, indent=2)
     return json_str.replace('{', '&#123;').replace('}', '&#125;').replace('\n', '\n    ')
 
+# Function to escape the {{string}} format in descriptions
+def escape_curly_braces(text):
+    return text.replace('{{', '&#123;&#123;').replace('}}', '&#125;&#125;')
+
 # Function to generate MDX content for a node
 def generate_mdx_content(node, slug):
     mdx_content = f"---\nid: {node['id']}\nslug: {slug}\n---\n\n"
     mdx_content += f"# {node['template']['name']}\n\n"
-    mdx_content += f"**Description**: {node['template']['description']}\n\n"
+    mdx_content += f"**Description**: {escape_curly_braces(node['template']['description'])}\n\n"
     mdx_content += f"**Type**: {node['type']}\n\n"
     
     if 'inputs' in node['template']:
@@ -48,14 +52,14 @@ def generate_mdx_content(node, slug):
         mdx_content += "| Name | Type | Description |\n| --- | --- | --- |\n"
         for input in node['template']['inputs']:
             input_type = input.get('type', 'Unknown')
-            mdx_content += f"| **{input['name']}** | {input_type} | {input['description']} |\n"
+            mdx_content += f"| **{input['name']}** | {input_type} | {escape_curly_braces(input['description'])} |\n"
 
     if 'outputs' in node['template']:
         mdx_content += "## Outputs\n\n"
         mdx_content += "| Name | Type | Description |\n| --- | --- | --- |\n"
         for output in node['template']['outputs']:
             output_type = output.get('type', 'Unknown')
-            description = output['description']
+            description = escape_curly_braces(output['description'])
             if '[' in description or '{' in description:
                 description = f"```json\n{escape_json_for_mdx(description)}\n```"
             mdx_content += f"| **{output['name']}** | {output_type} | {description} |\n"
@@ -65,7 +69,7 @@ def generate_mdx_content(node, slug):
         mdx_content += "| Name | Type | Description |\n| --- | --- | --- |\n"
         for option in node['template']['options']:
             option_type = option.get('type', 'Unknown')
-            description = option.get('description', 'No description provided')
+            description = escape_curly_braces(option.get('description', 'No description provided'))
             if '[' in description or '{' in description:
                 description = f"```json\n{escape_json_for_mdx(description)}\n```"
             mdx_content += f"| **{option['name']}** | {option_type} | {description} |\n"

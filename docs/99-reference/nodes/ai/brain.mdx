@@ -28,9 +28,7 @@ slug: brain
 | **Model** | text | Model to be used |
 | **Available Actions** | json | Defines the actions supported by the robot |
 | **Enable Knowledge Base** | boolean | Allow the robot to query the knowledge base before responding to the user. |
-| **Knowledge Base Context** | text | ```json
-"Global instructions for how the LLM should handle information retrieved from the knowledge base. Provided to the LLM immediately following the System Context. The &#123;&#123;knowledge&#125;&#125; tag within this text will be replaced with the content retrieved from the knowledge base."
-``` |
+| **Knowledge Base Context** | text | Global instructions for how the LLM should handle information retrieved from the knowledge base. Provided to the LLM immediately following the System Context. The &#123;&#123;knowledge&#125;&#125; tag within this text will be replaced with the content retrieved from the knowledge base. |
 | **Knowledge Base** | text | Knowledge base to query |
 | **Temperature** | number | Controls the randomness of the output content |
 | **Event Output** | boolean | If enabled, generated actions will be added to the event queue as events for rapid feedback. Otherwise, the LLM will complete its output and return the result as a whole. |
