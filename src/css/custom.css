@@ -92,3 +92,20 @@ button {
     height: 16px;
   }
 }
+
+.container,
+.markdown,
+.markdown table {
+  width: 100% !important;
+}
+
+table {
+  width: 100% !important;
+}
+
+table th,
+table td {
+  min-width: 80px;
+  /* Adjust the value as needed */
+  word-wrap: break-word;
+}

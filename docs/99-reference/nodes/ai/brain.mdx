@@ -1,0 +1,40 @@
+---
+id: 2kmbkccb1qqnh9r
+slug: brain
+---
+
+# Brain
+
+**Description**: Utilizes an LLM as the robot's brain for thinking, control, and other functions, responding appropriately to inputs based on a predefined list of actions.
+
+**Type**: function
+
+## Inputs
+
+| Name | Type | Description |
+| --- | --- | --- |
+| **Conversation ID** | text | The conversation ID. If empty, it will be treated as a single-turn conversation, and context functionality will not be provided. |
+| **Request** | text | User's request |
+## Outputs
+
+| Name | Type | Description |
+| --- | --- | --- |
+| **Actions** | json | Actions to perform based on input |
+## Options
+
+| Name | Type | Description |
+| --- | --- | --- |
+| **System Context** | text | Global instructions for the LLM that remain continuously in effect. |
+| **Model** | text | Model to be used |
+| **Available Actions** | json | Defines the actions supported by the robot |
+| **Enable Knowledge Base** | boolean | Allow the robot to query the knowledge base before responding to the user. |
+| **Knowledge Base Context** | text | ```json
+"Global instructions for how the LLM should handle information retrieved from the knowledge base. Provided to the LLM immediately following the System Context. The &#123;&#123;knowledge&#125;&#125; tag within this text will be replaced with the content retrieved from the knowledge base."
+``` |
+| **Knowledge Base** | text | Knowledge base to query |
+| **Temperature** | number | Controls the randomness of the output content |
+| **Event Output** | boolean | If enabled, generated actions will be added to the event queue as events for rapid feedback. Otherwise, the LLM will complete its output and return the result as a whole. |
+| **Event Queue** | text | ```json
+"Variable name of the event queue. The format for action events is: \n&#123;\n\"name\":\"ACTION\",\n\"timestamp\": number,\n\"parameters\":&#123;\nPARAMETERS_DEPENDS_ON_ACTION\n&#125;&#125;.\nThe timestamp is the time when the request was initiated. Therefore, events generated within a single request will have the same timestamp.\n"
+``` |
+| **NodeLogic** | any | Node logic |

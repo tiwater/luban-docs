@@ -2,13 +2,13 @@
 
 This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
-### Installation
+## Installation
 
 ```
 $ yarn
 ```
 
-### Local Development
+## Local Development
 
 ```
 $ yarn start
@@ -16,7 +16,7 @@ $ yarn start
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
-### Build
+## Build
 
 ```
 $ yarn build
@@ -24,7 +24,19 @@ $ yarn build
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
 
-### Deployment
+## Reference Generation
+
+We use python script `./tools/refgen.py` to generate reference files for the API documentation. To generate the reference files, run the following command:
+
+```bash
+$ python3 ./tools/refgen.py
+```
+
+This command will generate the reference files in the `./docs/99-reference/nodes` directory. Before generation, the script will clean the contents of the directory, so make sure to backup any files you want to keep.
+
+Please note the presence of the `nodes.json` and `categories.json` files in the tools directory. These files are crucial for generating the API documentation page. The `nodes.json` file contains detailed information about all the nodes, while the `categories.json` file organizes the information into relevant categories. The `refgen.py` script uses these data files to generate the comprehensive reference files needed for the documentation.
+
+## Deployment
 
 This website is hosted on GitHub pages. To deploy the website, run the following command:
 
@@ -41,3 +53,4 @@ $ GIT_USER=<Your GitHub username> yarn deploy
 ```
 
 If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+

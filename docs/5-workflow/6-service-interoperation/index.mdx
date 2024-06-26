@@ -1,0 +1,29 @@
+---
+sidebar_position: 6
+---
+
+# Service Interoperation
+
+Once a workflow has been built and deployed, the Service Interoperation feature enables interaction with that workflow. This functionality allows you to send data to a deployed workflow, receive data from it, trigger its execution, and retrieve its results.
+
+## Using Service Interoperation
+
+All deployed workflows appear in the **Subprocess** category within the node pane. You can drag and drop these deployed workflow nodes onto the canvas to begin interacting with them. 
+
+### Steps for Interoperation:
+
+1. **Deploy Workflow**: Ensure that your workflow is built and deployed.
+2. **Access in Subprocess**: Find the deployed workflow in the **Subprocess** category in the node pane.
+3. **Drag and Drop**: Drag the workflow node onto your canvas to integrate it into your current workflow.
+4. **Configure Interaction**:
+   - **Exposed Input Variables**: For interoperation to be possible, the deployed workflow must have exposed input variables. These are variables the workflow expects as input, and without them, you cannot send data to the workflow.
+   - **Properties Pane**: When you select the deployed workflow node on the canvas, the properties pane will display the exposed input variables. Configure these variables to enable data exchange and set up triggers.
+
+### Interoperating with a Deployed Workflow
+
+- **Sending Data**: You can send data to the deployed workflow using the exposed input variables. This flexibility allows you to control and modify the operations of a deployed workflow dynamically.
+- **Receiving Data**: Obtain data outputs from the deployed workflow to monitor its performance or to use the results in subsequent steps of your larger workflow.
+- **Triggering Workflow**: Initiate the execution of the deployed workflow based on specific events or conditions within your current workflow.
+- **Retrieving Results**: Access the execution results of the deployed workflow to validate outcomes or proceed with further processing.
+
+By leveraging the Service Interoperation feature, you can effectively manage and integrate various workflows, creating a cohesive and dynamic system. This approach enhances the modularity, reusability, and flexibility of your robotic solutions, enabling sophisticated, interconnected operations.

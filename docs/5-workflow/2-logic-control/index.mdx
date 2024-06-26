@@ -2,19 +2,33 @@
 sidebar_position: 2
 ---
 
-
 # Logic Control
 
-In workflow, the way to control the flow of the workflow is by using logic control nodes.
+In workflows, controlling the flow of data and operations is essential for building effective and adaptive processes. This is achieved through logic control nodes, which decide the next steps based on incoming data and conditions. There are two main categories of logic control nodes: conditional nodes and loop control nodes.
 
-Logic control nodes are used to control the flow of the workflow. They are used to make decisions based on the data received from the sensors and the output of the previous nodes.
+## Conditional Nodes
 
-The logic control nodes 
+Conditional nodes are used to make decisions based on data from sensors or outputs of previous nodes. They dictate the direction of the workflow by evaluating specific conditions.
 
-## Conditional
+### Supported Conditional Nodes:
 
-## Loop Control
+- **If**: Executes a specific flow if the given condition evaluates to true. If the condition is false, the flow is skipped.
+- **Switch**: Allows for multiple conditions to be defined. The flow corresponding to the first true condition is executed.
 
-For a flow to be executed multiple times, you can use the loop control node. The loop control node allows you to repeat a flow multiple times based on a condition.
+## Loop Control Nodes
 
-## Switch
+Loop control nodes enable the repetition of certain parts of the workflow multiple times based on defined conditions. These nodes are essential for tasks that require iterations, whether for a fixed number of times or until a particular condition is met.
+
+### Supported Loop Control Nodes:
+
+- **For Loop**: Repeats a flow a specified number of times. You can define the exact number of iterations.
+- **While Loop**: Repeats a flow as long as a certain condition remains true. The condition is evaluated before each iteration.
+- **For Each**: Repeats a flow for each item in an array. This is useful for processing collections of data.
+- **Continue**: Skips the rest of the current iteration and proceeds with the next iteration of the loop.
+- **Break**: Exits the loop immediately, moving on to the next node in the workflow.
+
+## Custom Logic Control
+
+If the available conditional and loop control nodes do not meet your needs, you can create custom nodes to define more complex or specific logic controls tailored to your requirements.
+
+By utilizing these logic control nodes, you can build workflows that effectively respond to varying data inputs and conditions, making your robotic systems more intelligent and adaptable.

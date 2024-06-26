@@ -1,0 +1,4232 @@
+[{
+  "id": "ptib9g8cimkj7i1",
+  "version": 1,
+  "name": "textLoader",
+  "tags": ["ai", "txt2img", "autogen"],
+  "type": "input",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-06-19 13:13:25.676Z",
+  "updated": "2023-09-05 07:33:00.930Z",
+  "template": {
+    "description": "Load text files and store them in an object storage",
+    "id": "textLoader",
+    "name": "Load Text Files",
+    "options": [{
+      "id": "file",
+      "name": "File",
+      "spec": {
+        "accept": {
+          "application/msword": [],
+          "application/pdf": [],
+          "text/plain": [".txt", ".csv", ".html", ".log"],
+          "application/json": []
+        },
+        "control": "file"
+      },
+      "type": "text[]"
+    }, {
+      "id": "export",
+      "name": "Export",
+      "description": "Export as an input parameter for the published API",
+      "spec": {
+        "defaultValue": true,
+        "control": "boolean"
+      },
+      "type": "boolean"
+    }],
+    "outputs": [{
+      "description": "Url of loaded files",
+      "id": "fileUrls",
+      "name": "FileUrls",
+      "type": "text[]"
+    }]
+  }
+}, {
+  "id": "maj9p33krrvxoue",
+  "version": 1,
+  "name": "textInputter",
+  "tags": ["autogen"],
+  "type": "input",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-06-25 10:34:56.857Z",
+  "updated": "2023-10-09 10:24:51.913Z",
+  "template": {
+    "description": "Get the text from the input",
+    "id": "textInputter",
+    "name": "Text Input",
+    "options": [{
+      "id": "data",
+      "name": "Data",
+      "spec": {
+        "rows": 2
+      },
+      "type": "text"
+    }, {
+      "id": "export",
+      "name": "Export",
+      "description": "Export as an input parameter for the published API",
+      "spec": {
+        "defaultValue": true,
+        "control": "boolean"
+      },
+      "type": "boolean"
+    }],
+    "outputs": [{
+      "description": "The text entered",
+      "id": "data",
+      "name": "Data",
+      "type": "text"
+    }]
+  }
+}, {
+  "id": "o28ku82mapldweb",
+  "version": 1,
+  "name": "textPreviewer",
+  "tags": ["autogen"],
+  "type": "debug",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-06-27 17:41:32.364Z",
+  "updated": "2023-09-05 07:30:05.938Z",
+  "template": {
+    "description": "Preview the text content",
+    "id": "textPreviewer",
+    "name": "Preview Text",
+    "inputs": [{
+      "description": "The text content to preview",
+      "id": "data",
+      "name": "Data",
+      "readonly": true,
+      "spec": {
+        "control": "text"
+      },
+      "type": "any",
+      "required": true
+    }],
+    "options": [],
+    "preview": {
+      "source": "data",
+      "type": "text",
+      "spec": {
+        "rows": 2
+      }
+    }
+  }
+}, {
+  "id": "d9j037fzf9o556q",
+  "version": 1,
+  "name": "httpRequest",
+  "tags": ["net"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-07-24 06:29:33.779Z",
+  "updated": "2023-10-16 15:18:57.864Z",
+  "template": {
+    "description": "Perform an HTTP access request",
+    "id": "httpRequest",
+    "name": "HTTP Request",
+    "inputs": [{
+      "description": "The URL to visit",
+      "id": "url",
+      "name": "URL",
+      "type": "text"
+    }, {
+      "description": "Http headers, in json format",
+      "id": "headers",
+      "name": "Headers",
+      "type": "text"
+    }, {
+      "description": "Http request body",
+      "id": "body",
+      "name": "Body",
+      "type": "text",
+      "spec": {
+        "rows": 2
+      }
+    }],
+    "options": [{
+      "description": "Timeout",
+      "id": "evalTimeout",
+      "name": "Timeout",
+      "type": "number",
+      "spec": {
+        "defaultValue": 60000
+      }
+    }, {
+      "description": "Node logic",
+      "id": "evalCode",
+      "name": "NodeLogic",
+      "type": "text",
+      "invisible": true,
+      "spec": {
+        "defaultValue": "(async() => {\n\ttry {if(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n\t\tconst response = await fetch(inputs.url, {\n\t\t\tmethod: options.method,\n\t\t\theaders: (typeof inputs.headers === 'string' ? (!inputs.headers || inputs.headers.trim() === '' ? {} : JSON.parse(inputs.headers)) : inputs.headers),\n\t\t\tbody: (options.method != 'GET' && options.method != 'DELETE') ? (typeof inputs.body === 'string' ? inputs.body : JSON.stringify(inputs.body)) : undefined\n\t\t});\n    if(response.ok){\n      const data = await response.text();\n      return {\n        data,\n        status: response.status\n      };\n    } else {\n      throw new Error(`${response.status} ${response.statusText}`);\n    }\n\t} catch (error) {\n\t\tconsole.error(error);\n\t\tthrow error;\n\t}\n})()"
+      }
+    }, {
+      "description": "Http request method",
+      "id": "method",
+      "name": "Method",
+      "spec": {
+        "options": [{
+          "id": "GET",
+          "name": "GET"
+        }, {
+          "id": "PUT",
+          "name": "PUT"
+        }, {
+          "id": "POST",
+          "name": "POST"
+        }, {
+          "id": "DELETE",
+          "name": "DELETE"
+        }],
+        "control": "select"
+      },
+      "type": "text"
+    }],
+    "outputs": [{
+      "description": "Response of the Http request",
+      "id": "data",
+      "name": "Data",
+      "type": "text"
+    }, {
+      "description": "Http status code",
+      "id": "status",
+      "name": "Status",
+      "type": "text"
+    }]
+  }
+}, {
+  "id": "lrija6k7mbl9nzp",
+  "version": 1,
+  "name": "outputter",
+  "tags": ["autogen"],
+  "type": "output",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-07-25 11:36:40.664Z",
+  "updated": "2023-09-05 07:29:42.108Z",
+  "template": {
+    "description": "The data output port of the flow",
+    "id": "outputter",
+    "name": "Data Output",
+    "inputs": [{
+      "description": "Receives data output from other nodes",
+      "id": "data",
+      "name": "data",
+      "type": "any"
+    }],
+    "outputs": [],
+    "options": []
+  }
+}, {
+  "id": "e5qn3pqczjb7t1z",
+  "version": 5,
+  "name": "subFlow",
+  "tags": [],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-07-26 05:34:38.160Z",
+  "updated": "2023-08-14 15:14:28.329Z",
+  "template": {
+    "description": "Call published workflow",
+    "id": "subFlow",
+    "name": "Sub Process",
+    "inputs": [],
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "name": "NodeLogic",
+      "type": "text",
+      "invisible": true,
+      "spec": {
+        "defaultValue": ""
+      }
+    }, {
+      "description": "Workflow",
+      "id": "workflow",
+      "name": "Workflow",
+      "invisible": true,
+      "spec": {
+        "control": "text"
+      },
+      "type": "text"
+    }, {
+      "description": "Synchronous call. If yes, wait until the action of this node is completed before returning.",
+      "id": "syncSubProcessCall",
+      "name": "Sync",
+      "spec": {
+        "dispExpSwitch": false,
+        "defaultValue": true,
+        "control": "boolean"
+      },
+      "type": "boolean"
+    }],
+    "outputs": [
+      {
+        "description": "Instance id of the sub process, only valid when sync is false. Can query the sub process's status by it",
+        "id": "subProcessInstanceId",
+        "name": "Instance ID",
+        "type": "text"
+      }
+    ]
+  }
+}, {
+  "id": "yoseh5mofgc7ihd",
+  "version": 1,
+  "name": "stringConcat",
+  "tags": ["txt2txt"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-07-28 03:44:40.259Z",
+  "updated": "2023-09-05 07:29:33.497Z",
+  "template": {
+    "description": "Concatenate strings",
+    "id": "stringConcat",
+    "name": "String Concat",
+    "dynamicInputs": true,
+    "inputs": [{
+      "description": "The first string",
+      "id": "string1",
+      "name": "String 1",
+      "type": "text",
+      "spec": {
+        "rows": 2
+      }
+    }, {
+      "description": "The second string",
+      "id": "string2",
+      "name": "String 2",
+      "type": "text",
+      "spec": {
+        "rows": 2
+      }
+    }],
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "name": "NodeLogic",
+      "type": "text",
+      "invisible": true,
+      "spec": {
+        "defaultValue": "if(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}const sortedKeys=Object.keys(inputs).filter(k=>k!=='trigger').sort();const concatenatedValues=sortedKeys.map(key=>inputs[key]).join('');const outputs={result:concatenatedValues};outputs;"
+      }
+    }],
+    "outputs": [{
+      "description": "Result of concatenation",
+      "id": "result",
+      "name": "Result",
+      "type": "text"
+    }]
+  }
+}, {
+  "id": "uxmj3hqkudvv3n5",
+  "version": 1,
+  "name": "extractGptContent",
+  "tags": [],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-07-28 11:42:32.376Z",
+  "updated": "2023-08-01 13:05:56.703Z",
+  "template": {
+    "description": "Extract content from the gpt's response, remove possible model header",
+    "id": "extractGptContent",
+    "name": "Extract Gpt Content",
+    "inputs": [{
+      "description": "Input string",
+      "id": "source",
+      "name": "Input String",
+      "type": "text"
+    }],
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "name": "NodeLogic",
+      "type": "text",
+      "invisible": true,
+      "spec": {
+        "defaultValue": "(() => {\n    try {\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\n      const inputStr = inputs.source;\n      const regex = /^({\\s*\"model\"\\s*:\\s*\"([^\"]+)\"\\s*})(.*)$/s;\n      const match = inputStr.match(regex);\n      return {\n        data: match ? match[3] : inputStr,\n        error: ''\n      };\n    } catch (error) {\n      return {\n        data: '',\n        error: error.message\n      };\n    }\n  })()"
+      }
+    }],
+    "outputs": [{
+      "description": "Processed Data",
+      "id": "data",
+      "name": "Data",
+      "type": "text"
+    }, {
+      "description": "Error Message",
+      "id": "error",
+      "name": "Error",
+      "type": "text"
+    }]
+  }
+}, {
+  "id": "kyl45impxatozcx",
+  "version": 1,
+  "name": "numberInputter",
+  "tags": ["autogen"],
+  "type": "input",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-02 16:18:35.773Z",
+  "updated": "2023-09-05 07:32:28.975Z",
+  "template": {
+    "id": "numberInputter",
+    "name": "Number Input",
+    "description": "Get the number from the input",
+    "options": [{
+      "id": "data",
+      "name": "Data",
+      "spec": {
+        "defaultValue": 0,
+        "control": "number"
+      },
+      "type": "number"
+    }, {
+      "id": "export",
+      "name": "Export",
+      "description": "Export as an input parameter for the published API",
+      "spec": {
+        "defaultValue": true
+      },
+      "type": "boolean"
+    }],
+    "outputs": [{
+      "description": "The number entered",
+      "id": "data",
+      "name": "Data",
+      "type": "number"
+    }]
+  }
+}, {
+  "id": "k5t7z5l6rtl52kp",
+  "version": 1,
+  "name": "numberArrayInputter",
+  "tags": [],
+  "type": "input",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-03 12:39:45.717Z",
+  "updated": "2023-10-16 15:18:02.774Z",
+  "template": {
+    "description": "Get the number array from the input",
+    "id": "numberArrayInputter",
+    "name": "Number Array Input",
+    "options": [{
+      "id": "data",
+      "name": "Data",
+      "spec": {
+        "defaultValue": [],
+        "control": "number[]"
+      },
+      "type": "number[]"
+    }, {
+      "id": "export",
+      "name": "Export",
+      "description": "Export as an input parameter for the published API",
+      "spec": {
+        "defaultValue": true,
+        "control": "boolean"
+      },
+      "type": "boolean"
+    }],
+    "outputs": [{
+      "description": "The number array entered",
+      "id": "data",
+      "name": "Data",
+      "type": "number[]"
+    }]
+  }
+}, {
+  "id": "hmdsxz5ctzwh6n9",
+  "version": 1,
+  "name": "textArrayInputter",
+  "tags": [],
+  "type": "input",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-03 12:41:42.923Z",
+  "updated": "2023-10-16 15:17:58.496Z",
+  "template": {
+    "description": "Get the text array from the input",
+    "id": "textArrayInputter",
+    "name": "Text Array Input",
+    "options": [{
+      "id": "data",
+      "name": "Data",
+      "spec": {
+        "defaultValue": [],
+        "control": "text[]"
+      },
+      "type": "text[]"
+    }, {
+      "id": "export",
+      "name": "Export",
+      "description": "Export as an input parameter for the published API",
+      "spec": {
+        "defaultValue": true,
+        "control": "boolean"
+      },
+      "type": "boolean"
+    }],
+    "outputs": [{
+      "description": "The text array entered",
+      "id": "data",
+      "name": "Data",
+      "type": "text[]"
+    }]
+  }
+}, {
+  "id": "y6ty4sklckzs4vf",
+  "version": 1,
+  "name": "booleanInputter",
+  "tags": [],
+  "type": "input",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-03 12:42:55.929Z",
+  "updated": "2023-10-16 15:17:50.857Z",
+  "template": {
+    "description": "Get the boolean value from the input",
+    "id": "booleanInputter",
+    "name": "Boolean Input",
+    "options": [{
+      "id": "data",
+      "name": "Data",
+      "spec": {
+        "defaultValue": false,
+        "control": "boolean"
+      },
+      "type": "boolean"
+    }, {
+      "id": "export",
+      "name": "Export",
+      "description": "Export as an input parameter for the published API",
+      "spec": {
+        "defaultValue": true,
+        "control": "boolean"
+      },
+      "type": "boolean"
+    }],
+    "outputs": [{
+      "description": "The boolean value entered",
+      "id": "data",
+      "name": "Data",
+      "type": "boolean"
+    }]
+  }
+}, {
+  "id": "2n74vqyh2k086rx",
+  "version": 1,
+  "name": "urlEncoder",
+  "tags": ["txt2txt"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-15 04:24:38.148Z",
+  "updated": "2023-10-16 15:17:21.036Z",
+  "template": {
+    "description": "URL-encode string",
+    "id": "urlEncoder",
+    "name": "Url Encode",
+    "inputs": [{
+      "description": "The string to be processed",
+      "id": "input",
+      "name": "Input",
+      "type": "text"
+    }],
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "name": "NodeLogic",
+      "type": "text",
+      "invisible": true,
+      "spec": {
+        "defaultValue": "if(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\noutputs={output: inputs.input.replace(/[^a-zA-Z0-9-_!'.\\()*]/g, (char) => {\n  return encodeURIComponent(char);\n})};\noutputs;"
+      }
+    }],
+    "outputs": [{
+      "description": "The encoded string",
+      "id": "output",
+      "name": "Output",
+      "type": "text"
+    }]
+  }
+}, {
+  "id": "bkppu0cy1wfco9r",
+  "version": 1,
+  "name": "stringManipulation",
+  "tags": ["txt2txt"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-16 02:50:41.806Z",
+  "updated": "2023-09-05 07:27:34.691Z",
+  "template": {
+    "description": "Replace the {{string}} format string in the template, where \"string\" the ID of the corresponding input port",
+    "id": "stringManipulation",
+    "name": "String Manipulation",
+    "dynamicInputs": true,
+    "inputs": [{
+      "description": "String template",
+      "id": "template",
+      "name": "Template",
+      "type": "text",
+      "spec": {
+        "rows": 2
+      }
+    }],
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "name": "NodeLogic",
+      "type": "text",
+      "invisible": true,
+      "readonly": true,
+      "spec": {
+        "defaultValue": "if(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\nlet output=inputs.template;for (const key in inputs){if(key!=='template'&&key!=='escape'){const placeholder=`{{${key}}}`;if(options.escape){const target=JSON.stringify(inputs[key]);const cleanedTarget=(target[0]==='\"'&&target[target.length-1]==='\"')?target.slice(1,-1):target;output=output.replaceAll(placeholder,cleanedTarget);}else{output=output.replaceAll(placeholder,inputs[key]);}}};const outputs={result:output};outputs;"
+      }
+    }, {
+      "description": "Whether escape special characters such as double quotation marks and line breaks in strings",
+      "id": "escape",
+      "name": "Escape",
+      "type": "boolean",
+      "spec": {
+        "dispExpSwitch": false,
+        "control": "boolean"
+      }
+    }],
+    "outputs": [{
+      "description": "The processed string",
+      "id": "result",
+      "name": "Result",
+      "type": "text"
+    }]
+  }
+}, {
+  "id": "oyr7mtzfsbg42nd",
+  "version": 1,
+  "name": "urlLoader",
+  "tags": ["net"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-24 09:59:46.498Z",
+  "updated": "2023-09-05 07:26:58.339Z",
+  "template": {
+    "description": "Get the content specified by the URL",
+    "id": "urlLoader",
+    "name": "Load URL Resource",
+    "inputs": [{
+      "description": "The URL to be accessed. Only support GET method",
+      "id": "url",
+      "name": "URL",
+      "type": "text"
+    }, {
+      "description": "Http Headers, in json format",
+      "id": "headers",
+      "name": "Headers",
+      "type": "text"
+    }],
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "name": "NodeLogic",
+      "type": "text",
+      "invisible": true,
+      "spec": {
+        "defaultValue": "(async() => {\n\tif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\ntry {\n\t\tconst response = await fetch(inputs.url, {\n\t\t\theaders: (typeof inputs.headers === 'string' ? (!inputs.headers || inputs.headers.trim() === '' ? {} : JSON.parse(inputs.headers)) : inputs.headers)\n\t\t});\n    if(response.ok){\n      const data = await response.text();\n      return {\n        data,\n        status: response.status\n      };\n    } else {\n      throw new Error(`${response.status} ${response.statusText}`);\n    }\n\t} catch (error) {\n\t\tconsole.error(error);\n\t\tthrow error;\n\t}\n})()"
+      }
+    }],
+    "outputs": [{
+      "description": "Content of the resource specified by the URL",
+      "id": "data",
+      "name": "Data",
+      "type": "text"
+    }]
+  }
+}, {
+  "id": "bhgetllxa0qzbxh",
+  "version": 1,
+  "name": "speech2text",
+  "tags": [],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-31 03:05:30.545Z",
+  "updated": "2023-08-31 03:05:30.545Z",
+  "template": {
+    "description": "Convert the audio of the lecture from the URL resource to text",
+    "id": "speech2text",
+    "name": "Speech to Text",
+    "inputs": [{
+      "description": "The URL of the audio to be converted",
+      "id": "audioUrl",
+      "name": "Audio Url",
+      "type": "text"
+    }],
+    "options": [],
+    "outputs": [{
+      "description": "The text converted",
+      "id": "text",
+      "name": "Text",
+      "type": "text"
+    }]
+  }
+}, {
+  "id": "mgf2vcfa2bfax40",
+  "version": 1,
+  "name": "audioLoader",
+  "tags": [],
+  "type": "input",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-31 06:22:50.166Z",
+  "updated": "2023-09-05 07:31:42.753Z",
+  "template": {
+    "description": "Load audio from a local file and store in object storage",
+    "id": "audioLoader",
+    "name": "Load Audio",
+    "options": [{
+      "id": "audios",
+      "name": "Audios",
+      "spec": {
+        "accept": {
+          "application/ogg": [],
+          "audio/ogg": [],
+          "audio/mpeg": [],
+          "audio/flac": [],
+          "video/mpeg": [],
+          "video/mp4": [],
+          "audio/mp4": [],
+          "audio/wav": [],
+          "video/webm": []
+        },
+        "control": "file"
+      },
+      "type": "text[]"
+    }, {
+      "id": "export",
+      "name": "Export",
+      "description": "Export as an input parameter for the published API",
+      "spec": {
+        "defaultValue": true,
+        "control": "boolean"
+      },
+      "type": "boolean"
+    }],
+    "outputs": [{
+      "description": "The URL of the uploaded audio files",
+      "id": "audioUrls",
+      "name": "Audio Urls",
+      "type": "text[]"
+    }]
+  }
+}, {
+  "id": "k3t6lltkrawfn5q",
+  "version": 1,
+  "name": "feedback",
+  "tags": [],
+  "type": "control",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-09-05 13:00:33.561Z",
+  "updated": "2023-10-16 15:20:10.487Z",
+  "template": {
+    "description": "Get feedback from user",
+    "id": "feedback",
+    "name": "Feedback",
+    "dynamicInputs": true,
+    "userConfirmed": false,
+    "inputs": [{
+      "description": "Prompt for user input",
+      "id": "prompt",
+      "name": "Prompt",
+      "type": "text",
+      "spec": {
+        "rows": 2,
+        "defaultValue": "Description for the requirement of user feedback"
+      }
+    }],
+    "options": [{
+      "id": "submit",
+      "name": "Submit",
+      "invisible": true,
+      "spec": {
+        "label": "Submit",
+        "control": "button"
+      },
+      "type": "text"
+    }, {
+      "description": "Node logic",
+      "id": "evalCode",
+      "name": "NodeLogic",
+      "type": "text",
+      "invisible": true,
+      "spec": {
+        "defaultValue": "const { prompt, ...cleanedOutputs } = inputs; cleanedOutputs;"
+      }
+    }],
+    "outputs": []
+  }
+}, {
+  "id": "n9xkstbg0rccp3u",
+  "version": 1,
+  "name": "selectInputter",
+  "tags": [],
+  "type": "input",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-09-16 15:27:09.850Z",
+  "updated": "2023-10-16 15:15:33.912Z",
+  "template": {
+    "description": "Use the drop-down box to select an input",
+    "id": "selectInputter",
+    "name": "Selection",
+    "options": [{
+      "id": "data",
+      "name": "Data",
+      "spec": {
+        "optionSource": "custom",
+        "options": [],
+        "control": "select"
+      },
+      "type": "text"
+    }, {
+      "id": "export",
+      "name": "Export",
+      "description": "Export as an input parameter for the published API",
+      "spec": {
+        "defaultValue": true,
+        "control": "boolean"
+      },
+      "type": "boolean"
+    }],
+    "outputs": [{
+      "description": "Selected value",
+      "id": "data",
+      "name": "Data",
+      "type": "text"
+    }]
+  }
+}, {
+  "id": "rjxp15q9pgho7mr",
+  "version": 1,
+  "name": "entity",
+  "tags": ["program"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-09-18 15:42:39.811Z",
+  "updated": "2023-10-16 15:15:50.422Z",
+  "template": {
+    "description": "Encapsulate properties as entity object",
+    "id": "entity",
+    "name": "Entity",
+    "dynamicInputs": true,
+    "inputs": [],
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "name": "NodeLogic",
+      "type": "text",
+      "invisible": true,
+      "readonly": true,
+      "spec": {
+        "defaultValue": "if(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\n{trigger, ...restInputs}=inputs;const outputs={entity:restInputs};outputs;"
+      }
+    }],
+    "outputs": [{
+      "description": "Entity object",
+      "id": "entity",
+      "name": "Entity",
+      "type": "any"
+    }]
+  }
+}, {
+  "id": "vdklse1bebnkcjn",
+  "version": 1,
+  "name": "addArrayElement",
+  "tags": ["program"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-09-18 15:59:09.259Z",
+  "updated": "2023-10-16 15:15:45.489Z",
+  "template": {
+    "description": "Add elements to the array. If you add more than one element at a time, keep the newly added element ID in element2, element3 form",
+    "id": "addArrayElement",
+    "name": "Add Array Element",
+    "dynamicInputs": true,
+    "inputs": [{
+      "description": "The original array",
+      "id": "inputArray",
+      "name": "Input Array",
+      "type": "json",
+      "spec": {
+        "expression": true,
+        "defaultValue": "[]",
+        "control": "text",
+        "rows": 2
+      }
+    }, {
+      "description": "The element to be added",
+      "id": "element1",
+      "name": "Element 1",
+      "type": "any",
+      "spec": {
+        "control": "text"
+      }
+    }],
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "name": "NodeLogic",
+      "type": "any",
+      "invisible": true,
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n    (() => {if(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\n    if(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n    \n        const inputArray = inputs.inputArray || [];\n        const { index } = options;\n        // Renaming elements as additionalInputs for better readability \n        const additionalInputs = Object.entries(inputs).filter(([key]) => key.startsWith(\"element\")) \n            .sort(([aKey], [bKey]) => parseInt(aKey.replace(/D/g,'')) - parseInt(bKey.replace(/D/g,'')))\n            .map(([, val]) => val);\n    \n        if(index>=0) {\n          additionalInputs.reverse().forEach(input => inputArray.splice(index, 0, input));\n        } else {\n          additionalInputs.forEach(input => inputArray.push(input));\n        }\n    \n        return { outputArray: inputArray };\n    })()\n    "
+      }
+    }, {
+      "description": "The index to insert the element at. -1 means at the end of the array.",
+      "id": "index",
+      "name": "Index",
+      "type": "number",
+      "spec": {
+        "defaultValue": -1,
+        "control": "number"
+      }
+    }],
+    "outputs": [{
+      "description": "The array with the new added elements",
+      "id": "outputArray",
+      "name": "Output Array",
+      "type": "json"
+    }]
+  }
+}, {
+  "id": "c26seyuk1byv40a",
+  "version": 1,
+  "name": "serialize",
+  "tags": ["program"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-09-19 11:45:39.348Z",
+  "updated": "2023-10-16 15:15:20.996Z",
+  "template": {
+    "description": "Serialize the object",
+    "id": "serialize",
+    "name": "Serialize",
+    "dynamicInputs": false,
+    "inputs": [{
+      "description": "The entity object to be serialized",
+      "id": "entity",
+      "name": "Entity",
+      "type": "any"
+    }],
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "name": "NodeLogic",
+      "type": "text",
+      "invisible": true,
+      "readonly": true,
+      "spec": {
+        "defaultValue": "if(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nconst outputs={'string':JSON.stringify(inputs.entity)};outputs;"
+      }
+    }],
+    "outputs": [{
+      "description": "The serialized data",
+      "id": "string",
+      "name": "String",
+      "type": "text"
+    }]
+  }
+}, {
+  "id": "p8vury8qgp7sn28",
+  "version": 1,
+  "name": "deserialize",
+  "tags": ["program"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-09-19 11:47:30.726Z",
+  "updated": "2023-10-16 15:15:15.397Z",
+  "template": {
+    "description": "Deserialize string into object",
+    "id": "deserialize",
+    "name": "Deserialize",
+    "dynamicInputs": false,
+    "inputs": [{
+      "description": "String to be deserialized",
+      "id": "string",
+      "name": "String",
+      "type": "text"
+    }],
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "name": "NodeLogic",
+      "type": "text",
+      "invisible": true,
+      "readonly": true,
+      "spec": {
+        "defaultValue": "if(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nconst outputs={entity:JSON.parse(inputs['string'])};outputs;"
+      }
+    }],
+    "outputs": [{
+      "description": "The deserialized entity",
+      "id": "entity",
+      "name": "Entity",
+      "type": "any"
+    }]
+  }
+}, {
+  "id": "admeu1mx3kmyx0j",
+  "version": 1,
+  "name": "setProperty",
+  "tags": ["program"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-09-20 07:41:47.436Z",
+  "updated": "2023-10-16 15:15:57.120Z",
+  "template": {
+    "description": "Sets the value of the property for the entity object",
+    "id": "setProperty",
+    "name": "Set Property",
+    "dynamicInputs": true,
+    "inputs": [{
+      "description": "The entity to be processed",
+      "id": "entity",
+      "name": "Entity",
+      "spec": {
+        "control": "text"
+      },
+      "type": "json"
+    }],
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "name": "NodeLogic",
+      "type": "text",
+      "invisible": true,
+      "readonly": true,
+      "spec": {
+        "defaultValue": "if(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nconst { trigger, evalCode, entity, ...properties } = inputs;const populatedEntity = { ...entity, ...properties };const outputs = {entity: populatedEntity};outputs;"
+      }
+    }],
+    "outputs": [{
+      "description": "The processed entity",
+      "id": "entity",
+      "name": "Entity",
+      "type": "any"
+    }]
+  }
+}, {
+  "id": "nhc2gkrhr94xz8p",
+  "version": 2,
+  "name": "getProperty",
+  "tags": ["program"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-09-20 07:44:44.302Z",
+  "updated": "2023-10-16 15:16:01.938Z",
+  "template": {
+    "description": "Gets the property value of an entity object",
+    "id": "getProperty",
+    "name": "Get Property",
+    "inputs": [{
+      "description": "The entity to be processed",
+      "id": "entity",
+      "name": "Entity",
+      "spec": {
+        "control": "text"
+      },
+      "type": "json"
+    }, {
+      "description": "The name of the property",
+      "id": "key",
+      "name": "Key",
+      "type": "text"
+    }],
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "name": "NodeLogic",
+      "type": "text",
+      "invisible": true,
+      "readonly": true,
+      "spec": {
+        "defaultValue": "if (typeof evaluatedInputs !== 'undefined') {\n\tinputs = { ...inputs,\n\t\t...evaluatedInputs\n\t};\n}\nif (typeof evaluatedOptions !== 'undefined') {\n\toptions = { ...parameters,\n\t\t...evaluatedOptions\n\t};\n} else {\n\toptions = { ...parameters\n\t};\n}\nconst getKeyValue = (obj, key) => {\n  const keys = key.split('.');\n  return keys.reduce((acc, curr) => acc && acc[curr], obj);\n};\n\nconst value = getKeyValue(inputs.entity, inputs.key);\n\nconst outputs = {\n  value\n};\n\noutputs;"
+      }
+    }],
+    "outputs": [{
+      "description": "Value of the property",
+      "id": "value",
+      "name": "Value",
+      "type": "any"
+    }]
+  }
+}, {
+  "access_level": 1,
+  "created": "2023-11-28 09:05:15.282Z",
+  "icon": "",
+  "id": "7atqd3tjbr1h3ac",
+  "version": 6,
+  "name": "human",
+  "owner": "",
+  "tags": ["control"],
+  "template": {
+    "description": "Create a humanoid robot",
+    "id": "human",
+    "inputs": [],
+    "name": "Humanoid Robot",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "(\n  async () => {\n\n    if (typeof evaluatedInputs !== 'undefined') { inputs = { ...inputs, ...evaluatedInputs }; }\n    if (typeof evaluatedOptions !== 'undefined') { options = { ...parameters, ...evaluatedOptions }; } else { options = { ...parameters }; }\n    // *** User code start ***\n    const host_value = options.host;\n    let operatingMode = options.operatingMode;\n\n\n    if(operatingMode === 'simulation'){\n      globalVariables.operatingMode = operatingMode;\n      globalVariables.simHost = options.simHost;\n      globalVariables.simPort = options.simPort;\n    } else if(operatingMode === 'realMachine'){\n      globalVariables.operatingMode = operatingMode;\n    } else {\n      // Not configured, follow previous behavior\n      operatingMode = globalVariables.operatingMode;\n    }\n    \n\n    const Human = rocsclient.Human;\n    let robot;\n    if(operatingMode === 'simulation'){\n      robot = new Human({ host: globalVariables.simHost, port: globalVariables.simPort, ssl: true});\n    } else {\n      // Default is realMachine\n      robot = new Human({ host: host_value });\n    }\n\n    let initStatus = 0; // 0 - Pending, 1 - timeout, 2 - err\n\n    let connected = false;\n    robot.on_connected(() => {\n      console.log(\"Connected to the robot!\");\n      connected = true;\n    })\n\n    robot.on_error((err) => {\n      initStatus = 2;\n      console.error(err);\n    });\n\n\n    const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));\n\n    setTimeout(() => {\n      initStatus = 1;\n    }, 5000);\n    // Wait until either the robot is connected or timeout occurs\n    while (!connected && initStatus == 0) {\n      await sleep(100);\n    };\n    if (!connected) {\n      throw new Error(\"Could not connect to the robot!\");\n    }\n\n    // Put into globalVariables\n    globalVariables.robot = robot;\n    globalVariables.host = host_value;\n\n    return {\n      done: true,\n    }\n    // *** User code end ***\n  }\n)()"
+      },
+      "type": "text"
+    }, {
+      "description": "IP of the human robot",
+      "id": "host",
+      "invisible": false,
+      "name": "Host",
+      "readonly": false,
+      "spec": {
+        "defaultValue": "192.168.12.1"
+      },
+      "type": "text"
+    }, {
+      "description": "The operating modes of the robot: simulation or realMachine",
+      "id": "operatingMode",
+      "invisible": true,
+      "name": "Operating Mode",
+      "readonly": true,
+      "type": "text"
+    }, {
+      "description": "Host of the simulation server",
+      "id": "simHost",
+      "invisible": true,
+      "name": "Simulation Server Host",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "4090.fftai.top"
+      },
+      "type": "text"
+    }, {
+      "description": "Port of the simulation instance",
+      "id": "simPort",
+      "invisible": true,
+      "name": "Simulation instance port",
+      "readonly": true,
+      "type": "number"
+    }],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2023-12-01 14:14:58.417Z"
+}, {
+  "access_level": 1,
+  "created": "2023-11-28 09:15:42.137Z",
+  "icon": "",
+  "id": "lzyoenbery8v0io",
+  "version": 1,
+  "name": "upperBodyAction",
+  "owner": "",
+  "tags": ["control"],
+  "template": {
+    "description": "Control humanoid robot's upper body movements",
+    "id": "upperBodyAction",
+    "inputs": [],
+    "name": "Upper Body Action",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\n\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n// *** User code start ***\nconst robot=globalVariables.robot;\n\nconst armAction_value=options.armAction;\nconst handAction_value=options.handAction;\n\nawait robot.upper_body(armAction_value === \"NO_ACTION\" ? undefined : armAction_value, \n                 handAction_value === \"NO_ACTION\" ? undefined : handAction_value);\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n"
+      },
+      "type": "text"
+    }, {
+      "description": "Set arm action",
+      "id": "armAction",
+      "invisible": false,
+      "name": "Arm Action",
+      "readonly": false,
+      "spec": {
+        "control": "select",
+        "defaultValue": "NO_ACTION",
+        "optionSource": "custom",
+        "options": [{
+          "id": "NO_ACTION",
+          "name": "NO_ACTION"
+        }, {
+          "id": "LEFT_ARM_WAVE",
+          "name": "LEFT_ARM_WAVE"
+        }, {
+          "id": "ARMS_SWING",
+          "name": "ARMS_SWING"
+        }, {
+          "id": "HELLO",
+          "name": "HELLO"
+        }, {
+          "id": "RESET",
+          "name": "RESET"
+        }]
+      },
+      "type": "text"
+    }, {
+      "description": "Set hand action",
+      "id": "handAction",
+      "invisible": false,
+      "name": "Hand Action",
+      "readonly": false,
+      "spec": {
+        "control": "select",
+        "defaultValue": "NO_ACTION",
+        "optionSource": "custom",
+        "options": [{
+          "id": "NO_ACTION",
+          "name": "NO_ACTION"
+        }, {
+          "id": "HALF_HANDSHAKE",
+          "name": "HALF_HANDSHAKE"
+        }, {
+          "id": "HANDSHAKE",
+          "name": "HANDSHAKE"
+        }, {
+          "id": "THUMB_UP",
+          "name": "THUMB_UP"
+        }, {
+          "id": "OPEN",
+          "name": "OPEN"
+        }, {
+          "id": "SLIGHTLY_BENT",
+          "name": "SLIGHTLY_BENT"
+        }, {
+          "id": "GRASP",
+          "name": "GRASP"
+        }, {
+          "id": "TREMBLE",
+          "name": "TREMBLE"
+        }]
+      },
+      "type": "text"
+    }],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2023-11-30 08:57:49.334Z"
+}, {
+  "access_level": 1,
+  "created": "2023-11-28 09:43:13.873Z",
+  "icon": "",
+  "id": "cvp7lkhftb6vfxd",
+  "version": 1,
+  "name": "walk",
+  "owner": "",
+  "tags": ["control"],
+  "template": {
+    "description": "Control the walking behavior of the robot",
+    "id": "walk",
+    "inputs": [],
+    "name": "Walk",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\n\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n// *** User code start ***\nconst robot=globalVariables.robot;\n\nconst angle_value=options.angle;\nconst speed_value=options.speed;\n\nrobot.walk(angle_value, speed_value)\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n"
+      },
+      "type": "text"
+    }, {
+      "description": "Specifies the direction of movement, with a range of -45 to 45 degrees. Negative values indicate a right turn, while positive values indicate a left turn",
+      "id": "angle",
+      "invisible": false,
+      "name": "Angle",
+      "readonly": false,
+      "spec": {
+        "control": "range",
+        "defaultValue": 0,
+        "min": -45,
+        "max": 45,
+        "step": 0.1
+      },
+      "type": "number"
+    }, {
+      "description": "Adjusts the speed of forward and backward motion, ranging from -0.8 to 0.8. Negative values correspond to backward movement, and positive values correspond to forward movement",
+      "id": "speed",
+      "invisible": false,
+      "name": "Speed",
+      "readonly": false,
+      "spec": {
+        "control": "range",
+        "defaultValue": 0.1,
+        "min": -0.8,
+        "max": 0.8,
+        "step": 0.1
+      },
+      "type": "number"
+    }],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2023-12-01 12:26:55.502Z"
+}, {
+  "access_level": 1,
+  "created": "2023-11-28 12:13:34.719Z",
+  "icon": "",
+  "id": "ji360oskzr7z1xn",
+  "version": 1,
+  "name": "moveJoints",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "This function is used to move joints to specified positions, considering motor limits",
+    "id": "moveJoints",
+    "inputs": [
+      {
+        "description": "An array of motors specifying the joints to be moved",
+        "id": "joints",
+        "name": "Joints",
+        "spec": {
+          "control": "joint[]",
+          "defaultValue": [{ "no": "1", "orientation": "left", "angle": 0 }],
+          "options": [{
+            "id": "left",
+            "name": "Left"
+          }, {
+            "id": "right",
+            "name": "Right"
+          }]
+        },
+        "type": "json"
+      }
+    ],
+    "name": "Move Joints",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\n// *** User code start ***\nconst motor=globalVariables.motor;\n\nconst joints=inputs.joints;\n\nawait motor.move_joint(joints);\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-29 15:21:29.160Z"
+}, {
+  "access_level": 1,
+  "created": "2023-11-29 03:53:08.348Z",
+  "icon": "",
+  "id": "gvarltnon9i6v37",
+  "version": 1,
+  "name": "delay",
+  "owner": "",
+  "tags": ["program"],
+  "template": {
+    "description": "Delay the specified time",
+    "id": "delay",
+    "inputs": [],
+    "name": "Delay",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n// *** User code start ***\nconst delay_value=options.time;\nconst sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));\nawait sleep(delay_value);\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n"
+      },
+      "type": "text"
+    }, {
+      "description": "Delay time in milliseconds (not exceeding 60 seconds)",
+      "id": "time",
+      "invisible": false,
+      "name": "Time",
+      "readonly": false,
+      "spec": {
+        "control": "number",
+        "defaultValue": 0
+      },
+      "type": "number"
+    }],
+    "outputs": []
+  },
+  "type": "function",
+  "updated": "2023-11-30 09:12:32.523Z"
+}, {
+  "access_level": 1,
+  "created": "2023-12-01 07:01:06.059Z",
+  "icon": "",
+  "id": "nuwpjqcjzm5tvy9",
+  "version": 1,
+  "name": "stand",
+  "owner": "",
+  "tags": ["control"],
+  "template": {
+    "description": "Use this function to make the robot stand up from a resting position or other positions. Once you've called start() and waited for stabilization, go ahead and use stand() to get the robot into a standing position. Only after making the stand() call can you then give further control commands or motion instructions. If the robot is walking or in the middle of other movements, you can also use this function to bring it to a stop",
+    "id": "stand",
+    "inputs": [],
+    "name": "Stand",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n// *** User code start ***\nconst robot=globalVariables.robot;\n\nawait robot.stand();\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n"
+      },
+      "type": "text"
+    }],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2023-12-01 14:15:27.575Z"
+}, {
+  "access_level": 1,
+  "created": "2023-8-21 10:34:30.022Z",
+  "icon": "",
+  "id": "67aji60zac0z37b",
+  "version": 2,
+  "name": "let",
+  "owner": "",
+  "tags": ["program"],
+  "template": {
+    "description": "Set value of a variable",
+    "id": "let",
+    "inputs": [],
+    "name": "Let",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\nasync ()=>{\n\n\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n// *** User code start ***\nconst variableName=options.variable;\nconst variableValue=options.value;\n\nflowInstanceVariables[variableName] = variableValue;\n\nreturn {\n  value: variableValue\n}\n// *** User code end ***\n  }\n)()\n"
+      },
+      "type": "text"
+    }, {
+      "description": "Variable Name",
+      "id": "variable",
+      "invisible": false,
+      "name": "Variable",
+      "readonly": false,
+      "spec": {
+        "control": "select",
+        "optionSource": "variable"
+      },
+      "type": "text"
+    }, {
+      "description": "Variable Value",
+      "id": "value",
+      "invisible": false,
+      "name": "Value",
+      "readonly": false,
+      "spec": {
+        "defaultValue": "",
+        "control": "text",
+        "rows": 2,
+        "expression": true
+      },
+      "inputtable": true,
+      "type": "any"
+    }],
+    "outputs": [{
+      "description": "The value set to the variable",
+      "id": "value",
+      "name": "Variable Value",
+      "type": "any"
+    }]
+  },
+  "type": "function",
+  "updated": "2023-09-15 03:53:14.619Z"
+}, {
+  "access_level": 1,
+  "created": "2023-12-21 11:42:56.582Z",
+  "icon": "",
+  "id": "7edrv4udakaowok",
+  "version": 2,
+  "name": "get",
+  "owner": "",
+  "tags": ["program"],
+  "template": {
+    "description": "Get value of a variable",
+    "id": "get",
+    "inputs": [],
+    "name": "Get",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n// *** User code start ***\nreturn {\n  value: flowInstanceVariables[options.variable]\n}\n// *** User code end ***\n  }\n)()\n"
+      },
+      "type": "text"
+    }, {
+      "description": "Variable Name",
+      "id": "variable",
+      "invisible": false,
+      "name": "Variable",
+      "readonly": false,
+      "spec": {
+        "control": "select",
+        "optionSource": "variable"
+      },
+      "type": "text"
+    }],
+    "outputs": [{
+      "description": "Value of the variable",
+      "id": "value",
+      "name": "Variable Value",
+      "type": "any"
+    }]
+  },
+  "type": "function",
+  "updated": "2024-01-03 11:47:32.742Z"
+}, {
+  "id": "1tatbumroyyfr2h",
+  "version": 1,
+  "name": "if",
+  "tags": [],
+  "type": "control",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-21 02:24:38.327Z",
+  "updated": "2023-08-28 03:22:59.411Z",
+  "template": {
+    "description": "Condition execution",
+    "id": "if",
+    "name": "If",
+    "inputs": [{
+      "description": "The judgment condition",
+      "id": "condition",
+      "name": "Condition",
+      "type": "boolean",
+      "spec": {
+        "control": "boolean",
+        "rows": 1,
+        "expression": true,
+        "defaultValue": ""
+      }
+    }],
+    "options": [],
+    "outputs": [{
+      "description": "True branch",
+      "id": "true",
+      "name": "True",
+      "type": "trigger"
+    }, {
+      "description": "False branch",
+      "id": "false",
+      "name": "False",
+      "type": "trigger"
+    }]
+  }
+}, {
+  "id": "8vu9uz3251wo8gx",
+  "version": 1,
+  "name": "forEach",
+  "tags": [],
+  "type": "control",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-29 10:28:44.336Z",
+  "updated": "2023-09-15 03:53:14.619Z",
+  "template": {
+    "description": "Loop for each item in a collection",
+    "id": "forEach",
+    "name": "For Each",
+    "inputs": [{
+      "description": "The collection to loop",
+      "id": "collection",
+      "name": "Collection",
+      "type": "json",
+      "spec": {
+        "control": "text",
+        "rows": 1,
+        "expression": true,
+        "defaultValue": "[]"
+      }
+    }],
+    "options": [],
+    "outputs": [{
+      "id": "item",
+      "name": "Item",
+      "description": "Item in the collection",
+      "type": "any"
+    }, {
+      "id": "index",
+      "name": "Index",
+      "description": "Index of current loop",
+      "type": "number"
+    }]
+  }
+}, {
+  "id": "8vu9uz3251wo9gx",
+  "version": 1,
+  "name": "for",
+  "tags": [],
+  "type": "control",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-29 10:28:44.336Z",
+  "updated": "2023-09-15 03:53:14.619Z",
+  "template": {
+    "description": "Loop for specified times",
+    "id": "for",
+    "name": "For",
+    "inputs": [{
+      "description": "How many times should loop",
+      "id": "count",
+      "name": "Count",
+      "type": "number"
+    }],
+    "options": [],
+    "outputs": [{
+      "id": "index",
+      "name": "Index",
+      "description": "Index of current loop",
+      "type": "number"
+    }]
+  }
+}, {
+  "id": "8vu9uz3251wo0gx",
+  "version": 1,
+  "name": "while",
+  "tags": [],
+  "type": "control",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-29 10:28:44.336Z",
+  "updated": "2023-09-15 03:53:14.619Z",
+  "template": {
+    "description": "Loop based on the conditon",
+    "id": "while",
+    "name": "While",
+    "inputs": [{
+      "description": "Loop condition",
+      "id": "condition",
+      "name": "Condition",
+      "type": "boolean",
+      "spec": {
+        "control": "boolean",
+        "rows": 1,
+        "expression": true,
+        "defaultValue": ""
+      }
+    }],
+    "options": [],
+    "outputs": []
+  }
+}, {
+  "id": "8vu0uz3251wo0gx",
+  "version": 1,
+  "name": "switch",
+  "tags": [],
+  "type": "control",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-29 10:28:44.336Z",
+  "updated": "2023-09-15 03:53:14.619Z",
+  "template": {
+    "description": "Switch branch based on conditon",
+    "id": "switch",
+    "name": "Switch",
+    "inputs": [{
+      "description": "Condition",
+      "id": "condition",
+      "name": "Condition",
+      "type": "any",
+      "spec": {
+        "control": "text",
+        "rows": 1,
+        "expression": true,
+        "defaultValue": ""
+      }
+    }],
+    "options": [{
+      "description": "Case 1",
+      "id": "case1",
+      "name": "Case 1",
+      "type": "any",
+      "spec": {
+        "control": "text"
+      }
+    }],
+    "outputs": [{
+      "description": "Case 1",
+      "id": "case1",
+      "name": "Case 1",
+      "type": "trigger"
+    }, {
+      "description": "Default",
+      "id": "default",
+      "name": "Default",
+      "type": "trigger"
+    }]
+  }
+}, {
+  "id": "8vu9uz3252wo0gx",
+  "version": 1,
+  "name": "continue",
+  "tags": [],
+  "type": "control",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-29 10:28:44.336Z",
+  "updated": "2023-09-15 03:53:14.619Z",
+  "template": {
+    "description": "Continue next round of loop",
+    "id": "continue",
+    "name": "Continue",
+    "inputs": [],
+    "options": [{
+      "description": "Loop node for the continue",
+      "id": "loopNode",
+      "invisible": true,
+      "name": "Loop Node",
+      "readonly": true,
+      "type": "text"
+    }],
+    "outputs": [{
+      "description": "done",
+      "id": "done",
+      "name": "Done",
+      "invisible": true,
+      "type": "trigger"
+    }]
+  }
+}, {
+  "id": "8vu9uz3253wo0gx",
+  "version": 1,
+  "name": "break",
+  "tags": [],
+  "type": "control",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-29 10:28:44.336Z",
+  "updated": "2023-09-15 03:53:14.619Z",
+  "template": {
+    "description": "Break the loop",
+    "id": "break",
+    "name": "Break",
+    "inputs": [],
+    "options": [{
+      "description": "Loop node for the break",
+      "id": "loopNode",
+      "invisible": true,
+      "name": "Loop Node",
+      "readonly": true,
+      "type": "text"
+    }],
+    "outputs": [{
+      "description": "done",
+      "id": "done",
+      "name": "Done",
+      "invisible": true,
+      "type": "trigger"
+    }]
+  }
+}, {
+  "id": "1tatbumroyyfr3h",
+  "version": 1,
+  "name": "codeBlock",
+  "tags": [],
+  "type": "",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-21 02:24:38.327Z",
+  "updated": "2023-08-28 03:22:59.411Z",
+  "template": {
+    "description": "Code block",
+    "id": "codeBlock",
+    "name": "Code Block",
+    "inputs": [],
+    "options": [{
+      "description": "Code block category",
+      "id": "category",
+      "invisible": true,
+      "name": "Category",
+      "readonly": true,
+      "type": "text"
+    }],
+    "outputs": []
+  }
+}, {
+  "id": "ykm3z25xyki1ufl",
+  "version": 1,
+  "name": "imagePreviewer",
+  "tags": ["autogen"],
+  "type": "debug",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-06-27 17:41:32.364Z",
+  "updated": "2023-09-05 07:30:05.938Z",
+  "template": {
+    "description": "Preview an image through its URL",
+    "id": "imagePreviewer",
+    "name": "Preview Image",
+    "inputs": [{
+      "description": "Image's URL",
+      "id": "images",
+      "name": "Images",
+      "readonly": true,
+      "spec": {
+        "control": "text[]"
+      },
+      "type": "text[]",
+      "required": true
+    }],
+    "options": [],
+    "preview": {
+      "source": "images",
+      "type": "image",
+      "spec": {
+        "num": 3,
+        "size": 48
+      }
+    }
+  }
+}, {
+  "access_level": 1,
+  "created": "2023-11-28 09:15:42.137Z",
+  "icon": "",
+  "id": "lzyoenbdry8v0io",
+  "version": 1,
+  "name": "lowerBodyAction",
+  "owner": "",
+  "tags": ["control"],
+  "template": {
+    "description": "Control humanoid robot's lower body movements",
+    "id": "lowerBodyAction",
+    "inputs": [],
+    "name": "Lower Body Action",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\n\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n// *** User code start ***\nconst robot=globalVariables.robot;\n\nconst bodyAction=options.bodyAction;\n\nrobot.lower_body(bodyAction);\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n"
+      },
+      "type": "text"
+    }, {
+      "description": "Set lower body movements",
+      "id": "bodyAction",
+      "invisible": false,
+      "name": "Body Action",
+      "readonly": false,
+      "spec": {
+        "control": "select",
+        "defaultValue": "ROTATE_WAIST",
+        "optionSource": "custom",
+        "options": [{
+          "id": "ROTATE_WAIST",
+          "name": "ROTATE_WAIST"
+        }, {
+          "id": "SQUAT",
+          "name": "SQUAT"
+        }]
+      },
+      "type": "text"
+    }],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2023-11-30 08:57:49.334Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-15 15:42:42.541Z",
+  "icon": "",
+  "id": "fs3hhrf40uwal7i",
+  "version": 1,
+  "name": "camera",
+  "owner": "",
+  "tags": ["management"],
+  "template": {
+    "description": "The camera on robot, used to capture video stream and get video stream status",
+    "id": "camera",
+    "inputs": [],
+    "name": "Camera",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\n// *** User code start ***\nconst robot=globalVariables.robot;\n\nreturn {\n  status: robot.camera?.videoStreamStatus ?? false,\n  url: robot.camera?.videoStreamUrl\n};\n// *** User code end ***\n  }\n)()\n",
+        "rows": "3"
+      },
+      "type": "text"
+    }],
+    "outputs": [{
+      "description": "Video stream status",
+      "id": "status",
+      "name": "Status",
+      "spec": {
+        "control": "boolean",
+        "defaultValue": ""
+      },
+      "type": "boolean"
+    }, {
+      "description": "Video stream URL",
+      "id": "url",
+      "name": "URL",
+      "spec": {
+        "defaultValue": ""
+      },
+      "type": "text"
+    }]
+  },
+  "type": "robot",
+  "updated": "2024-01-15 15:50:51.692Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-15 09:50:30.317Z",
+  "icon": "",
+  "id": "3egv1x5crisot8w",
+  "version": 1,
+  "name": "head",
+  "owner": "",
+  "tags": ["control"],
+  "template": {
+    "description": "Control the movement of the robot's head",
+    "id": "head",
+    "inputs": [{
+      "description": "Specify the rotation around the x-axis. Negative values turn the head to the left, and positive values turn it to the right. Range: -17.1887 to 17.1887",
+      "id": "roll",
+      "name": "Roll",
+      "spec": {
+        "control": "number",
+        "defaultValue": 0
+      },
+      "type": "number"
+    }, {
+      "description": "Specify the rotation around the y-axis. Positive values tilt the head forward, and negative values tilt it backward. Range: -17.1887 to 17.1887",
+      "id": "pitch",
+      "name": "Pitch",
+      "spec": {
+        "control": "number",
+        "defaultValue": 0
+      },
+      "type": "number"
+    }, {
+      "description": "Specify the rotation around the z-axis. Negative values twist the head to the left, and positive values twist it to the right. Range: -17.1887 to 17.1887",
+      "id": "yaw",
+      "name": "Yaw",
+      "spec": {
+        "control": "number",
+        "defaultValue": 0
+      },
+      "type": "number"
+    }],
+    "name": "Head",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\n// *** User code start ***\nconst robot=globalVariables.robot;\n\nconst roll_value=inputs.roll;\nconst pitch_value=inputs.pitch;\nconst yaw_value=inputs.yaw;\n\nrobot.head(roll_value, pitch_value, yaw_value);\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+        "rows": "3"
+      },
+      "type": "text"
+    }],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-15 10:00:02.088Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-15 07:36:30.708Z",
+  "icon": "",
+  "id": "47w6x2cma2ldgl6",
+  "version": 1,
+  "name": "bodyAction",
+  "owner": "",
+  "tags": ["control"],
+  "template": {
+    "description": "Control the movement of the robot's body",
+    "id": "bodyAction",
+    "inputs": [{
+      "description": "Controls the up-and-down movement, ranging from -0.15 to 0. Negative values for downward motion, 0 for neutral position",
+      "id": "squat",
+      "name": "Squat",
+      "spec": {
+        "control": "number",
+        "defaultValue": 0
+      },
+      "type": "number"
+    }, {
+      "description": "Controls left-and-right rotation, with a range of -14.32 to 14.32. Positive values for left rotation, negative for right rotation. Precision of 8 decimal places",
+      "id": "rotateWaist",
+      "name": "Rotate Waist",
+      "spec": {
+        "control": "number",
+        "defaultValue": 0
+      },
+      "type": "number"
+    }],
+    "name": "Body",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\n// *** User code start ***\nconst squat_value=inputs.squat;\nconst rotateWaist_value=inputs.rotateWaist;\n\nconst robot=globalVariables.robot;\n\nrobot.body(squat_value, rotateWaist_value);\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+        "rows": "3"
+      },
+      "type": "text"
+    }],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-15 07:45:12.823Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-15 08:11:04.826Z",
+  "icon": "",
+  "id": "asr03hsjbq3mnov",
+  "version": 1,
+  "name": "closeControlSvr",
+  "owner": "",
+  "tags": ["management"],
+  "template": {
+    "description": "Close the robot control program",
+    "id": "closeControlSvr",
+    "inputs": [],
+    "name": "Close Control Server",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\n// *** User code start ***\nconst robot=globalVariables.robot;\n\nconst result = await robot.control_svr_close();\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+        "rows": "3"
+      },
+      "type": "text"
+    }],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-15 08:46:55.700Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-15 08:15:13.420Z",
+  "icon": "",
+  "id": "r4d56ijieco3axs",
+  "version": 1,
+  "name": "controlSvrLog",
+  "owner": "",
+  "tags": ["management"],
+  "template": {
+    "description": "View the logs of the control program",
+    "id": "controlSvrLog",
+    "inputs": [],
+    "name": "View Control Server Log",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\n// *** User code start ***\nconst robot=globalVariables.robot;\n\nconst logs = (await robot.control_svr_log_view())?.data;\n\nreturn {\n  logs,\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+        "rows": "3"
+      },
+      "type": "text"
+    }],
+    "outputs": [{
+      "description": "Information containing the logs",
+      "id": "logs",
+      "name": "Logs",
+      "spec": {
+        "defaultValue": "",
+        "rows": "3"
+      },
+      "type": "text"
+    }]
+  },
+  "type": "robot",
+  "updated": "2024-01-15 08:15:52.212Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-15 08:16:34.210Z",
+  "icon": "",
+  "id": "fks3yaxzh5c6d18",
+  "version": 6,
+  "name": "startControlSvr",
+  "owner": "",
+  "tags": ["management"],
+  "template": {
+    "description": "Start the robot control program",
+    "id": "startControlSvr",
+    "inputs": [],
+    "name": "Start Control Server",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "(\n  async () => {\n\n    // *** User code start ***\n    const robot = globalVariables.robot;\n    const operatingMode = globalVariables.operatingMode;\n    let host;\n    let port;\n\n    if(operatingMode === 'simulation'){\n      host = globalVariables.simHost;\n      port = globalVariables.simPort;\n    } else {\n      // Default is realMachine\n      host = globalVariables.host;\n      port = 8001;\n    }\n\n    if (!robot || !host) {\n      throw new Error('Robot is not created!');\n    }\n\n    const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));\n\n    let inited = false;\n    let initStatus = 0; // 0 - Pending, 1 - timeout, 2 - err\n\n    const control_svr_start = async () => {\n      // node-fetch\n      const response = await fetch(`http${operatingMode === 'simulation' ? 's' : ''}://${host}:${port}/robot/sdk_ctrl/start`);\n\n      if (!response.ok) {\n        throw new Error(`HTTP error! status: ${response.status}`);\n      }\n\n      let result = '';\n      inited = false;\n\n      const resultDecoder = new TextDecoder();\n      response.body.on('data', (chunk) => {\n        result += resultDecoder.decode(chunk);\n\n        if (result.includes(\"init!\")) {\n          inited = true;\n          console.log(\"Luban: Init finished!\");\n          response.body.destroy(); // 关闭流并触发“end”事件\n        }\n      });\n\n      response.body.on('end', () => {\n        inited = true;\n        console.log('Done!');\n        return inited;\n      });\n\n      response.body.on('error', () => {\n        initStatus = 2;\n      });\n\n      setTimeout(() => {\n        initStatus = 1;\n      }, 30000);\n      while (!inited && initStatus == 0) {\n        await sleep(100);\n      };\n\n      if (!inited) {\n        throw new Error(\"Could not start the control server!\");\n      }\n    };\n\n    // Start control program\n    try {\n      await control_svr_start();\n    } catch (error) {\n      console.error(error);\n      throw error;\n    }\n\n    if (!inited) {\n      throw new Error(\"Could not initialize to the robot!\");\n    }\n\n    return {\n      done: true,\n    }\n    // *** User code end ***\n  }\n)()",
+        "rows": "3"
+      },
+      "type": "text"
+    }],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-15 08:47:04.961Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-15 08:31:53.374Z",
+  "icon": "",
+  "id": "mnftdqt7jg0n8f1",
+  "version": 1,
+  "name": "controlSvrStatus",
+  "owner": "",
+  "tags": ["management"],
+  "template": {
+    "description": "Check the status of the control program",
+    "id": "controlSvrStatus",
+    "inputs": [],
+    "name": "Control Server Status",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\n// *** User code start ***\nconst robot=globalVariables.robot;\n\nconst status = (await robot.control_svr_status())?.data?.data;\n\nreturn {\n  status,\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+        "rows": "3"
+      },
+      "type": "text"
+    }],
+    "outputs": [{
+      "description": "Information detailing the status",
+      "id": "status",
+      "name": "Status",
+      "type": "boolean"
+    }]
+  },
+  "type": "robot",
+  "updated": "2024-01-15 08:32:15.828Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-15 08:34:03.669Z",
+  "icon": "",
+  "id": "ltjwee5c4apbkmn",
+  "version": 1,
+  "name": "disableDebugState",
+  "owner": "",
+  "tags": ["management"],
+  "template": {
+    "description": "Disables the debug state mode, stopping the periodic state updates from the robot",
+    "id": "disableDebugState",
+    "inputs": [],
+    "name": "Disable Debug State",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\n// *** User code start ***\nconst robot=globalVariables.robot;\n\nawait robot.disable_debug_state();\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+        "rows": "3"
+      },
+      "type": "text"
+    }],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-15 08:48:01.888Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-15 08:48:32.494Z",
+  "icon": "",
+  "id": "9nnyda6h8mmprev",
+  "version": 1,
+  "name": "enableDebugState",
+  "owner": "",
+  "tags": ["management"],
+  "template": {
+    "description": "Enable the debug state mode, allowing the robot to actively send periodic state updates. To handle and process the received data, be sure to handle the 'On Message' node",
+    "id": "enableDebugState",
+    "inputs": [],
+    "name": "Enable debug state",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n// *** User code start ***\nconst robot=globalVariables.robot;\nconst frequence_value=options.frequence;\n\nawait robot.enable_debug_state(frequence_value);\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+        "rows": "3"
+      },
+      "type": "text"
+    }, {
+      "description": "Frequency of the state update",
+      "id": "frequence",
+      "invisible": false,
+      "name": "Frequence",
+      "readonly": false,
+      "spec": {
+        "control": "number",
+        "defaultValue": 1,
+        "rows": "3"
+      },
+      "type": "number"
+    }],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-15 09:03:17.162Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-15 09:37:15.218Z",
+  "icon": "",
+  "id": "0nlr5jeg1zdji8l",
+  "version": 1,
+  "name": "getJointLimit",
+  "owner": "",
+  "tags": ["management"],
+  "template": {
+    "description": "Retrieve the joint limits of the robot, including the permissible range of motion for each joint",
+    "id": "getJointLimit",
+    "inputs": [],
+    "name": "Get Joint Limit",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\n// *** User code start ***\nconst robot=globalVariables.robot;\n\nconst resp = await robot.get_joint_limit();\nlet data;\nif(resp.status === 200 && resp.data.msg === 'ok'){\n  data = resp.data.data?.data;\n}\n\nreturn {\n  limits: data,\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+        "rows": "3"
+      },
+      "type": "text"
+    }],
+    "outputs": [{
+      "description": "Joint limits of the robot",
+      "id": "limits",
+      "name": "Limits",
+      "type": "json"
+    }]
+  },
+  "type": "robot",
+  "updated": "2024-01-15 09:40:11.821Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-15 09:41:58.082Z",
+  "icon": "",
+  "id": "dh2nr0atumckruc",
+  "version": 1,
+  "name": "getJointStates",
+  "owner": "",
+  "tags": ["management"],
+  "template": {
+    "description": "Retrieve the current joint states of the robot",
+    "id": "getJointStates",
+    "inputs": [],
+    "name": "Get Joint States",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\n// *** User code start ***\nconst robot=globalVariables.robot;\n\nconst resp = await robot.get_joint_states();\nlet data;\nif(resp.status === 200 && resp.data.msg === 'ok'){\n  data = resp.data.data?.data;\n}\n\nreturn {\n  states: data,\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+        "rows": "3"
+      },
+      "type": "text"
+    }],
+    "outputs": [{
+      "description": "The current joint states",
+      "id": "states",
+      "name": "States",
+      "type": "json"
+    }]
+  },
+  "type": "robot",
+  "updated": "2024-01-15 09:50:42.096Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-18 03:23:15.798Z",
+  "icon": "",
+  "id": "9i7o0w96gp3o9p5",
+  "version": 1,
+  "name": "getMotorLimits",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "Retrieve the motor limits",
+    "id": "getMotorLimits",
+    "inputs": [],
+    "name": "Get Motor Limit List",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\n// *** User code start ***\nconst motor=globalVariables.motor;\n\nconst resp = await motor.get_motor_limit_list();\nlet data;\nif(resp.status === 200 && resp.data.msg === 'ok'){\n  data = resp.data.data;\n}\n\nreturn {\n  limits: data,\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": [
+      {
+        "description": "Limits of the motors",
+        "id": "limits",
+        "name": "Limits",
+        "type": "json"
+      }
+    ]
+  },
+  "type": "robot",
+  "updated": "2024-01-29 15:09:13.658Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-16 04:24:20.652Z",
+  "icon": "",
+  "id": "uwob2x9dozg65wz",
+  "version": 1,
+  "name": "start",
+  "owner": "",
+  "tags": ["control"],
+  "template": {
+    "description": "Initiates the process to reset, zero, or calibrate the robot, bringing it to its initial state. This command is crucial when you intend to take control of the robot, ensuring it starts from a known and calibrated position",
+    "id": "start",
+    "inputs": [],
+    "name": "Start",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\n// *** User code start ***\nconst robot=globalVariables.robot;\n\nawait robot.start();\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-16 05:33:00.516Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-16 04:24:31.808Z",
+  "icon": "",
+  "id": "5auhtfsaiaqo0pb",
+  "version": 1,
+  "name": "stop",
+  "owner": "",
+  "tags": ["control"],
+  "template": {
+    "description": "Initiates the process to safely power down the robot. This command takes precedence over other commands, ensuring an orderly shutdown. It is recommended to trigger this command in emergency situations or when an immediate stop is necessary",
+    "id": "stop",
+    "inputs": [],
+    "name": "Stop",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\n// *** User code start ***\nconst robot=globalVariables.robot;\n\nawait robot.stop();\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-16 05:33:43.763Z"
+}, {
+  "access_level": 1,
+  "created": "2023-8-21 10:34:30.022Z",
+  "icon": "",
+  "id": "67aji60zqc0z27b",
+  "version": 1,
+  "name": "expression",
+  "owner": "",
+  "tags": ["program"],
+  "template": {
+    "description": "Calculate an expression",
+    "id": "expression",
+    "inputs": [],
+    "name": "Expression",
+    "options": [{
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\nasync ()=>{\n\n\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n// *** User code start ***\nreturn {\n  value: options.expression\n}\n// *** User code end ***\n  }\n)()\n"
+      },
+      "type": "text"
+    }, {
+      "description": "Expression to be processed",
+      "id": "expression",
+      "invisible": false,
+      "name": "Expression",
+      "readonly": false,
+      "spec": {
+        "defaultValue": "",
+        "control": "text",
+        "expression": true,
+        "dispExpSwitch": false
+      },
+      "type": "text"
+    }],
+    "outputs": [{
+      "description": "The value obtained from the expression",
+      "id": "value",
+      "name": "Expression Value",
+      "type": "any"
+    }]
+  },
+  "type": "function",
+  "updated": "2023-09-15 03:53:14.619Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-29 14:50:30.472Z",
+  "icon": "",
+  "version": 6,
+  "id": "zcw2hpuchu5aewu",
+  "name": "motor",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "This class provides a control class for the upper limb motors of the robot",
+    "id": "motor",
+    "inputs": [],
+    "name": "Motor",
+    "options": [
+      {
+        "description": "IP address of the robot",
+        "id": "host",
+        "name": "Host",
+        "spec": {
+          "defaultValue": "192.168.12.1"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "(\n  async () => {\n\n    if (typeof evaluatedOptions !== 'undefined') { options = { ...parameters, ...evaluatedOptions }; } else { options = { ...parameters }; }\n    // *** User code start ***\n    const host_value = options.host;\n    let operatingMode = options.operatingMode;\n\n\n    if(operatingMode === 'simulation'){\n      globalVariables.operatingMode = operatingMode;\n      globalVariables.simHost = options.simHost;\n      globalVariables.simPort = options.simPort;\n    } else if(operatingMode === 'realMachine'){\n      globalVariables.operatingMode = operatingMode;\n    } else {\n      // Not configured, follow previous behavior\n      operatingMode = globalVariables.operatingMode;\n    }\n\n    const Motor = rocsclient.Motor;\n    let motor;\n    if(operatingMode === 'simulation'){\n      motor = new motor({ host: globalVariables.simHost, port: globalVariables.simPort, ssl: true});\n    } else {\n      // Default is realMachine\n      motor = new motor({ host: host_value });\n    }\n    let initStatus = 0; // 0 - Pending, 1 - timeout, 2 - err\n\n    let connected = false;\n    motor.on_connected(() => {\n      console.log(\"Connected to the robot motor controller!\");\n      connected = true;\n    })\n\n    motor.on_error((err) => {\n      initStatus = 2;\n      console.error(err);\n    });\n\n\n    const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));\n\n    setTimeout(() => {\n      initStatus = 1;\n    }, 5000);\n    // Wait until either the robot is connected or timeout occurs\n    while (!connected && initStatus == 0) {\n      await sleep(100);\n    };\n    if (!connected) {\n      throw new Error(\"Could not connect to the robot motor controller!\");\n    }\n\n    // Put into globalVariables\n    globalVariables.motor = motor;\n    globalVariables.host = host_value;\n\n    // Wait for motors limit ready\n    let timeout = 0;\n\n    while (timeout++ < 5 && !(motor.motor_limits)) {\n      await sleep(500);\n    }\n\n    let arm_motor = motor.motor_limits.slice(0, 17);\n    arm_motor = (motor.motor_limits.length > 18) ? arm_motor : [];\n\n    let clamping_jaw = motor.motor_limits.slice(17, 19);\n    clamping_jaw = (motor.motor_limits.length > 20) ? clamping_jaw : [];\n\n    let dexterous_hand = motor.motor_limits.slice(19, 31);\n    dexterous_hand = (motor.motor_limits.length > 32) ? dexterous_hand : [];\n\n    const motors = arm_motor.concat(clamping_jaw);\n    globalVariables.motors = motors;\n\n    const smoothMotionByInterpolation = async (no, orientation, targetAngle, offset = 0.05, interval = 0.004) => {\n      let motor = globalVariables.motor;\n      // Use differential to move the motor smoothly\n      if (Number.parseInt(no) > 8) {\n        console.log('Motor number greater than 8 is not supported.');\n        return;\n      }\n\n      const waitTargetDone = async (relTol = 2) => {\n        const startTime = Date.now(); // capture the time at the start\n        const timeout = 100; // set the timeout to 100 ms\n\n        while (true) {\n\n          try {\n            let result = await motor.get_motor_pvc(no, orientation);\n            let p = result.data?.data?.position;\n            if (Math.abs(p - targetAngle) <= relTol) {\n              break;\n            }\n            // If more than 100 ms has passed, exit the loop by log an error\n            if ((Date.now() - startTime) > timeout) {\n              throw new Error(`Timeout: More than ${timeout} ms passed without reaching target ${targetAngle} while current is ${p}`);\n            }\n          } catch (e) {\n            console.log(`waitTargetDone err: ${e}`);\n            break;\n          }\n        }\n      }\n\n      let currentPosition;\n\n      let timeout = 0;\n\n      while (timeout++ < 3) {\n        try {\n          let result = await motor.get_motor_pvc(no, orientation);\n          currentPosition = result.data?.data?.position;\n          if (currentPosition !== undefined) {\n            break;\n          }\n        } catch (e) {\n          console.log(`Get current position err: ${e}`);\n        }\n      }\n\n      if (currentPosition !== undefined) {\n\n        let targetPosition = targetAngle;\n        let cycle = Math.abs(Math.floor((targetPosition - currentPosition) / offset));\n\n        for (let i = 0; i < cycle; i++) {\n          if (targetPosition > currentPosition) {\n            currentPosition += offset;\n          } else {\n            currentPosition -= offset;\n          }\n          motor.move_motor(no, orientation, currentPosition);\n          await new Promise(resolve => setTimeout(resolve, interval * 1000));\n        }\n        await waitTargetDone();\n      } else {\n        throw new Error('Cannot get current position');\n      }\n    }\n\n    // Set smoothMotionByInterpolation as a global function\n    globalVariables.smoothMotionByInterpolation = smoothMotionByInterpolation;\n\n    return {\n      done: true,\n    }\n    // *** User code end ***\n  }\n)()",
+          "rows": "3"
+        },
+        "type": "text"
+      },
+      {
+        "description": "The operating modes of the robot: simulation or realMachine",
+        "id": "operatingMode",
+        "invisible": true,
+        "name": "Operating Mode",
+        "readonly": true,
+        "type": "text"
+      },
+      {
+        "description": "Host of the simulation server",
+        "id": "simHost",
+        "invisible": true,
+        "name": "Simulation Server Host",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "4090.fftai.top"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Port of the simulation instance",
+        "id": "simPort",
+        "invisible": true,
+        "name": "Simulation instance port",
+        "readonly": true,
+        "type": "number"
+      }
+    ],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-29 15:02:08.876Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-29 15:12:11.129Z",
+  "icon": "",
+  "version": 1,
+  "id": "y6ijdsuvkka7x54",
+  "name": "setMotorPdFlag",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "Set PD mode for a specific motor",
+    "id": "setMotorPdFlag",
+    "inputs": [
+      {
+        "description": "Motor number",
+        "id": "no",
+        "name": "No",
+        "spec": {
+          "defaultValue": "1"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Motor orientation",
+        "id": "orientation",
+        "name": "Orientation",
+        "spec": {
+          "control": "select",
+          "optionSource": "custom",
+          "defaultValue": "left",
+          "options": [{
+            "id": "left",
+            "name": "Left"
+          }, {
+            "id": "right",
+            "name": "Right"
+          }]
+        },
+        "type": "text"
+      }
+    ],
+    "name": "Set Motor PD Flag",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\n\n// *** User code start ***\nconst no_value=inputs.no;\nconst orientation_value=inputs.orientation;\n\nconst motor=globalVariables.motor;\n\nmotor.set_motor_pd_flag(no_value, orientation_value);\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-29 15:16:08.712Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-29 15:17:03.857Z",
+  "icon": "",
+  "version": 1,
+  "id": "q63c10uf1tgm4fd",
+  "name": "setMotorPd",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "Set the parameters for a Proportional-Derivative (PD) control mode for a specific motor",
+    "id": "setMotorPd",
+    "inputs": [
+      {
+        "description": "Motor number",
+        "id": "no",
+        "name": "No",
+        "spec": {
+          "defaultValue": "1"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Motor orientation",
+        "id": "orientation",
+        "name": "Orientation",
+        "spec": {
+          "control": "select",
+          "optionSource": "custom",
+          "defaultValue": "left",
+          "options": [{
+            "id": "left",
+            "name": "Left"
+          }, {
+            "id": "right",
+            "name": "Right"
+          }]
+        },
+        "type": "text"
+      },
+      {
+        "description": "Proportional gain value",
+        "id": "p",
+        "name": "P",
+        "spec": {
+          "defaultValue": 0.36
+        },
+        "type": "number"
+      },
+      {
+        "description": "Derivative gain value",
+        "id": "d",
+        "name": "D",
+        "spec": {
+          "defaultValue": 0.042
+        },
+        "type": "number"
+      }
+    ],
+    "name": "Set Motor PD Parameters",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\n\n// *** User code start ***\nconst no_value=inputs.no;\nconst orientation_value=inputs.orientation;\nconst p_value=inputs.p;\nconst d_value=inputs.d;\n\nconst motor=globalVariables.motor;\n\nmotor.set_motor_pd(no_value, orientation_value, p_value, d_value);\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-29 15:20:02.163Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-29 15:23:03.934Z",
+  "icon": "",
+  "version": 1,
+  "id": "821loitqi0wpkff",
+  "name": "enableMotor",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "Enable the specified motor",
+    "id": "enableMotor",
+    "inputs": [
+      {
+        "description": "Motor number",
+        "id": "no",
+        "name": "No",
+        "spec": {
+          "defaultValue": "1"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Motor orientation",
+        "id": "orientation",
+        "name": "Orientation",
+        "spec": {
+          "control": "select",
+          "optionSource": "custom",
+          "defaultValue": "left",
+          "options": [{
+            "id": "left",
+            "name": "Left"
+          }, {
+            "id": "right",
+            "name": "Right"
+          }]
+        },
+        "type": "text"
+      }
+    ],
+    "name": "Enable Motor",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\n// *** User code start ***\nconst no_value=inputs.no;\nconst orientation_value=inputs.orientation;\n\nconst motor=globalVariables.motor;\n\nmotor.enable_motor(no_value, orientation_value);\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-29 15:42:20.867Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-29 15:23:03.934Z",
+  "icon": "",
+  "version": 1,
+  "id": "823loitqi0wpkff",
+  "name": "disableMotor",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "Disable the specified motor",
+    "id": "disableMotor",
+    "inputs": [
+      {
+        "description": "Motor number",
+        "id": "no",
+        "name": "No",
+        "spec": {
+          "defaultValue": "1"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Motor orientation",
+        "id": "orientation",
+        "name": "Orientation",
+        "spec": {
+          "control": "select",
+          "optionSource": "custom",
+          "defaultValue": "left",
+          "options": [{
+            "id": "left",
+            "name": "Left"
+          }, {
+            "id": "right",
+            "name": "Right"
+          }]
+        },
+        "type": "text"
+      }
+    ],
+    "name": "Disable Motor",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\n// *** User code start ***\nconst no_value=inputs.no;\nconst orientation_value=inputs.orientation;\n\nconst motor=globalVariables.motor;\n\nmotor.disable_motor(no_value, orientation_value);\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-29 15:42:20.867Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-29 15:43:09.485Z",
+  "icon": "",
+  "version": 1,
+  "id": "t6jjcazm921hkde",
+  "name": "enableHand",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "Enable the Hand for individual control",
+    "id": "enableHand",
+    "inputs": [],
+    "name": "Enable Hand",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\n// *** User code start ***\nconst motor=globalVariables.motor;\n\nawait motor.enable_hand();\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-29 15:45:38.505Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-29 15:43:09.485Z",
+  "icon": "",
+  "version": 1,
+  "id": "t6jjcazm931hkde",
+  "name": "disableHand",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "Disable the Hand for individual control",
+    "id": "disableHand",
+    "inputs": [],
+    "name": "Disable Hand",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\n// *** User code start ***\nconst motor=globalVariables.motor;\n\nawait motor.disable_hand();\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-29 15:45:38.505Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-29 15:50:09.166Z",
+  "icon": "",
+  "version": 1,
+  "id": "rx2qy2hjl8yajrr",
+  "name": "getMotorPvc",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "Get the Position, Velocity, and Current (PVC) information for a specific motor",
+    "id": "getMotorPvc",
+    "inputs": [
+      {
+        "description": "Motor number",
+        "id": "no",
+        "name": "No",
+        "spec": {
+          "defaultValue": "1"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Motor orientation",
+        "id": "orientation",
+        "name": "Orientation",
+        "spec": {
+          "control": "select",
+          "optionSource": "custom",
+          "defaultValue": "left",
+          "options": [{
+            "id": "left",
+            "name": "Left"
+          }, {
+            "id": "right",
+            "name": "Right"
+          }]
+        },
+        "type": "text"
+      }
+    ],
+    "name": "Get Motor PVC",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\n// *** User code start ***\nconst no_value=inputs.no;\nconst orientation_value=inputs.orientation;\n\nconst motor=globalVariables.motor;\n\nconst resp = await motor.get_motor_pvc(no_value, orientation_value);\n\nreturn {\n  pvc: resp.data?.data,\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": [
+      {
+        "description": "PVC information",
+        "id": "pvc",
+        "name": "PVC",
+        "type": "json"
+      }
+    ]
+  },
+  "type": "robot",
+  "updated": "2024-01-29 16:01:26.061Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-29 16:02:03.904Z",
+  "icon": "",
+  "version": 1,
+  "id": "ro2u9h5kq3f8k0u",
+  "name": "getHandPosition",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "Get the current position of the robot's hand",
+    "id": "getHandPosition",
+    "inputs": [],
+    "name": "Get Hand Position",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\n// *** User code start ***\nconst motor=globalVariables.motor;\n\nconst resp = await motor.get_hand_position();\n\nreturn {\n  position: resp.data?.data,\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": [
+      {
+        "description": "Position data of the robot's hand",
+        "id": "position",
+        "name": "Position",
+        "type": "json"
+      }
+    ]
+  },
+  "type": "robot",
+  "updated": "2024-01-29 16:03:30.115Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-31 03:33:19.740Z",
+  "icon": "",
+  "version": 1,
+  "id": "u5ynu7ihlmdia8w",
+  "name": "enableAll",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "Enable all motors of the upper limb motors",
+    "id": "enableAll",
+    "inputs": [],
+    "name": "Enable All Motors",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\n// *** User code start ***\nconst motor = globalVariables.motor;\nconst motors = globalVariables.motors;\n\nif(!motors) {\n  throw new Error('Please create Motor node first, and ensure it is executed successfully!');\n}\nfor (let item of motors) {\n    motor.enable_motor(item['no'], item['orientation']);\n}\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-31 05:20:08.914Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-31 03:39:07.802Z",
+  "icon": "",
+  "version": 1,
+  "id": "hj6fpfdhqhbd2xg",
+  "name": "disableAll",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "Reset the upper limb motors to the zero position, then disable the motors",
+    "id": "disableAll",
+    "inputs": [],
+    "name": "Disable All Motors",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n\n// *** User code start ***\nconst motor = globalVariables.motor;\nconst motors = globalVariables.motors;\n\nconst offset_value = options.offset;\nconst interval_value = options.interval;\n\nif(!motors) {\n  throw new Error('Please create Motor node first, and ensure it is executed successfully!');\n}\n\nconst disableAll = async (offset = 1, interval = 0.015) => {\n  //Disable All Motors \n\n  const _disableLeft = async () => {\n      for (let i = motors.length - 1; i >= 0; i--) {\n          let item = motors[i];\n          if (item['orientation'] === 'left') {\n              await globalVariables.smoothMotionByInterpolation(item['no'], item['orientation'], 0, offset, interval);\n          }\n      }\n\n      for (let i = motors.length - 1; i >= 0; i--) {\n          let item = motors[i];\n          if (item['orientation'] === 'left') {\n              motor.disable_motor(item['no'], item['orientation']);\n          }\n      }\n  }\n\n  const _disableRight = async () => {\n      for (let i = motors.length - 1; i >= 0; i--) {\n          let item = motors[i];\n          if (item['orientation'] !== 'left') {\n              await globalVariables.smoothMotionByInterpolation(item['no'], item['orientation'], 0, 1.5, 0.02);\n          }\n      }\n\n      for (let i = motors.length - 1; i >= 0; i--) {\n          let item = motors[i];\n          if (item['orientation'] !== 'left') {\n              motor.disable_motor(item['no'], item['orientation']);\n          }\n      }\n  }\n\n  await Promise.all([_disableLeft(), _disableRight()]);\n}\n\nawait disableAll(offset_value, interval_value);\n\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      },
+      {
+        "description": "The angle of rotation of the motor at each interval",
+        "id": "offset",
+        "invisible": false,
+        "name": "Offset",
+        "readonly": false,
+        "spec": {
+          "defaultValue": 0.05
+        },
+        "type": "number"
+      },
+      {
+        "description": "The interval of time for each movement (in second)",
+        "id": "interval",
+        "invisible": false,
+        "name": "Interval",
+        "readonly": false,
+        "spec": {
+          "defaultValue": 0.004
+        },
+        "type": "number"
+      }
+    ],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-31 05:31:40.618Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-31 09:35:26.521Z",
+  "icon": "",
+  "version": 1,
+  "id": "f35jhkbxjqqzpgz",
+  "name": "moveJointsSmoothly",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "Smoothly perform joint movements using interpolation within a specified time",
+    "id": "moveJointsSmoothly",
+    "inputs": [
+      {
+        "description": "An array of motors specifying the joints to be moved",
+        "id": "joints",
+        "name": "Joints",
+        "spec": {
+          "control": "joint[]",
+          "defaultValue": [{ "no": "1", "orientation": "left", "angle": 0 }],
+          "options": [{
+            "id": "left",
+            "name": "Left"
+          }, {
+            "id": "right",
+            "name": "Right"
+          }]
+        },
+        "type": "json"
+      },
+      {
+        "description": "The duration to complete the movements (in second)",
+        "id": "time",
+        "name": "Time",
+        "spec": {
+          "defaultValue": 1
+        },
+        "type": "number"
+      },
+      {
+        "description": "Interval of time for each movement interpolation",
+        "id": "interval",
+        "name": "Interval",
+        "spec": {
+          "defaultValue": 0.004
+        },
+        "type": "number"
+      }
+    ],
+    "name": "Move Joints Smoothly By Time",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n// *** User code start ***\nconst joints=inputs.joints;\nconst time=inputs.time;\nconst interval=inputs.interval;\n\nconst motor = globalVariables.motor;\nconst motors = globalVariables.motors;\nconst sync=options.sync;\n// Initialize an array to hold all the promises for each joint motion\nlet motions = [];\n\n// Loop through all the joints and create a promise for each joint's motion\nfor (let joint of joints) {\n    let initialPosition;\n\n    let timeout = 0;\n  \n    while (timeout++<3) {\n        try {\n            let result = await motor.get_motor_pvc(joint.no, joint.orientation);\n            initialPosition = result.data?.data?.position;\n            if (initialPosition !== undefined) {\n                break;\n            }\n        } catch (e) {\n          console.log(`Get current position err: ${e}`);\n        }\n    }\n\n    // Calculate offset based on given time and interval. It dictates how much the motor would move in each step.\n    if(initialPosition !== undefined){\n      const offset = Math.abs((joint.angle - initialPosition) / (time / interval));\n\n      // Push this joint's motion promise in our array\n      motions.push(globalVariables.smoothMotionByInterpolation(joint.no, joint.orientation, joint.angle, offset, interval));\n    } else {\n      throw new Error(`Failed to get initial position for joint ${joint.no}`);\n    }\n}\nif(sync){\n// Wait for all the motion promises to complete. They all run simultaneously due to Promise.all().\nawait Promise.all(motions);\n}\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      },
+      {
+        "id": "sync",
+        "name": "Sync",
+        "description": "Synchronous call. If yes, wait until the motion is completed before returning.",
+        "spec": {
+          "dispExpSwitch": false,
+          "defaultValue": true,
+          "control": "boolean"
+        },
+        "type": "boolean"
+      }
+    ],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-31 09:59:45.515Z"
+}, {
+  "access_level": 1,
+  "created": "2024-01-31 16:17:22.423Z",
+  "icon": "",
+  "version": 1,
+  "id": "kv3p6ryrcnozk62",
+  "name": "moveJointsByInterpolation",
+  "owner": "",
+  "tags": ["motor"],
+  "template": {
+    "description": "Smoothly perform joint movements using interpolation",
+    "id": "moveJointsByInterpolation",
+    "inputs": [
+      {
+        "description": "An array of motors specifying the joints to be moved",
+        "id": "joints",
+        "name": "Joints",
+        "spec": {
+          "control": "joint[]",
+          "defaultValue": [{ "no": "1", "orientation": "left", "angle": 0 }],
+          "options": [{
+            "id": "left",
+            "name": "Left"
+          }, {
+            "id": "right",
+            "name": "Right"
+          }]
+        },
+        "type": "json"
+      },
+      {
+        "description": "The angle of rotation of the motor at each interval of time",
+        "id": "offset",
+        "name": "Offset",
+        "spec": {
+          "defaultValue": 0.05
+        },
+        "type": "number"
+      },
+      {
+        "description": "Interval of time for each movement interpolation",
+        "id": "interval",
+        "name": "Interval",
+        "spec": {
+          "defaultValue": 0.004
+        },
+        "type": "number"
+      }
+    ],
+    "name": "Move Joints By Interpolation",
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "\n(\n  async ()=>{\n\nif(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n// *** User code start ***\nconst joints=inputs.joints;\nconst offset=inputs.offset;\nconst interval=inputs.interval;\nconst sync=options.sync;\n// Initialize an array to hold all the promises for each joint motion\nlet motions = [];\n\n// Loop through all the joints and create a promise for each joint's motion\nfor (let joint of joints) {\n  motions.push(globalVariables.smoothMotionByInterpolation(joint.no, joint.orientation, joint.angle, offset, interval));\n}\nif(sync){\n// Wait for all the motion promises to complete. They all run simultaneously due to Promise.all().\nawait Promise.all(motions);\n}\nreturn {\n  done: true,\n}\n// *** User code end ***\n  }\n)()\n",
+          "rows": "3"
+        },
+        "type": "text"
+      },
+      {
+        "id": "sync",
+        "name": "Sync",
+        "description": "Synchronous call. If yes, wait until the motion is completed before returning.",
+        "spec": {
+          "dispExpSwitch": false,
+          "defaultValue": true,
+          "control": "boolean"
+        },
+        "type": "boolean"
+      }
+    ],
+    "outputs": []
+  },
+  "type": "robot",
+  "updated": "2024-01-31 16:23:40.409Z"
+}, {
+  "id": "vdkbse1becnkajn",
+  "version": 1,
+  "name": "getArrayElement",
+  "tags": ["program"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-09-18 15:59:09.259Z",
+  "updated": "2023-10-16 15:15:45.489Z",
+  "template": {
+    "description": "Get element from the array by index and remove it if required.",
+    "id": "getArrayElement",
+    "name": "Get Array Element",
+    "inputs": [{
+      "description": "The original array",
+      "id": "inputArray",
+      "name": "Input Array",
+      "type": "json",
+      "spec": {
+        "expression": true,
+        "defaultValue": "[]",
+        "control": "text",
+        "rows": 2
+      }
+    }],
+    "options": [
+      {
+        "description": "Index of the item to retrieve. -1 means at the end of the array.",
+        "id": "index",
+        "name": "Index",
+        "type": "number",
+        "spec": {
+          "defaultValue": 0,
+          "control": "number"
+        }
+      },
+      {
+        "description": "Whether to remove the retrieved item from the array",
+        "id": "remove",
+        "name": "Remove",
+        "type": "boolean",
+        "spec": {
+          "defaultValue": false,
+          "control": "boolean"
+        }
+      },
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "name": "NodeLogic",
+        "type": "any",
+        "invisible": true,
+        "readonly": true,
+        "spec": {
+          "defaultValue": "(() => {\n    if(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\nif(typeof evaluatedOptions!=='undefined'){options={...parameters,...evaluatedOptions};}else{options={...parameters};}\n\n    const inputArray = inputs.inputArray || [];\n    let { index, remove } = options;\n\n    let item;if(isNaN(index)||index<0){if(remove){item=inputArray.splice(inputArray.length-1,1)[0];}else{item=inputArray[inputArray.length-1];}}else{if(remove){item=inputArray.splice(index,1)[0];}else{item=inputArray[index];}}\n\n    return { element: item, outputArray: inputArray };\n})()"
+        }
+      }
+    ],
+    "outputs": [
+      {
+        "description": "Retrieved element",
+        "id": "element",
+        "name": "Element",
+        "type": "any"
+      },
+      {
+        "description": "The array after retrieving and removing the item if specified",
+        "id": "outputArray",
+        "name": "Output Array",
+        "type": "json"
+      }
+    ]
+  }
+}, {
+  "id": "1dobsx12ec6kajn",
+  "version": 1,
+  "name": "getArrayLength",
+  "tags": ["program"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-09-18 15:59:09.259Z",
+  "updated": "2023-10-16 15:15:45.489Z",
+  "template": {
+    "description": "Get element from the array by index and remove it if required.",
+    "id": "getArrayLength",
+    "name": "Get Array Length",
+    "inputs": [{
+      "description": "The array to process",
+      "id": "inputArray",
+      "name": "Input Array",
+      "type": "json",
+      "spec": {
+        "expression": true,
+        "defaultValue": "[]",
+        "control": "text",
+        "rows": 2
+      }
+    }],
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "name": "NodeLogic",
+        "type": "any",
+        "invisible": true,
+        "readonly": true,
+        "spec": {
+          "defaultValue": "(() => {\n    if(typeof evaluatedInputs!=='undefined'){inputs={...inputs,...evaluatedInputs};}\n  \n    const inputArray = inputs.inputArray || [];\n\treturn { length: inputArray.length };\n})()"
+        }
+      }
+    ],
+    "outputs": [
+      {
+        "description": "Length of the array",
+        "id": "length",
+        "name": "Length",
+        "type": "number"
+      }
+    ]
+  }
+}, {
+  "id": "1deblxk7ecnk2jn",
+  "version": 1,
+  "name": "random",
+  "tags": ["program"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-09-18 15:59:09.259Z",
+  "updated": "2023-10-16 15:15:45.489Z",
+  "template": {
+    "description": "Generate a number between [0, 1)",
+    "id": "random",
+    "name": "Random",
+    "inputs": [],
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "name": "NodeLogic",
+        "type": "any",
+        "invisible": true,
+        "readonly": true,
+        "spec": {
+          "defaultValue": "({ 'number': Math.random() })"
+        }
+      }
+    ],
+    "outputs": [
+      {
+        "description": "The generated number",
+        "id": "number",
+        "name": "Number",
+        "type": "number"
+      }
+    ]
+  }
+}, {
+  "id": "c1enlxk83czk2in",
+  "version": 1,
+  "name": "date",
+  "tags": ["program"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-09-18 15:59:09.259Z",
+  "updated": "2023-10-16 15:15:45.489Z",
+  "template": {
+    "description": "Get the current date & time",
+    "id": "date",
+    "name": "Date",
+    "inputs": [],
+    "options": [
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "name": "NodeLogic",
+        "type": "any",
+        "invisible": true,
+        "readonly": true,
+        "spec": {
+          "defaultValue": "(() => {\n  const d = new Date();\n  return { timestamp: d.getTime(), 'date': d.toLocaleString(), isoDate: d.toISOString() };\n})()"
+        }
+      }
+    ],
+    "outputs": [
+      {
+        "description": "The timestamp of the current date",
+        "id": "timestamp",
+        "name": "Timestamp",
+        "type": "number"
+      },
+      {
+        "description": "The current date and time in string format",
+        "id": "date",
+        "name": "Date",
+        "type": "text"
+      },
+      {
+        "description": "The current date and time in ISO string format",
+        "id": "isoDate",
+        "name": "ISO Date",
+        "type": "text"
+      }
+    ]
+  }
+}, {
+  "id": "3gmpth9bazenhqr",
+  "version": 4,
+  "name": "tts",
+  "tags": ["interaction"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-06-21 12:10:55.646Z",
+  "updated": "2023-08-28 07:08:11.409Z",
+  "template": {
+    "description": "Converts text to speech",
+    "id": "tts",
+    "name": "Text To Speech",
+    "inputs": [{
+      "description": "The text to process",
+      "id": "text",
+      "name": "Text",
+      "type": "text"
+    }],
+    "options": [
+      {
+        "description": "Timbre",
+        "id": "speaker",
+        "name": "Timbre",
+        "spec": {
+          "control": "select",
+          "optionSource": "custom",
+          "defaultValue": 0,
+          "options": [{
+            "id": 0,
+            "name": "Xiaomei"
+          }, {
+            "id": 1,
+            "name": "Xiaoyu"
+          }, {
+            "id": 3,
+            "name": "Xiaoyao"
+          }, {
+            "id": 4,
+            "name": "Yaya"
+          }, {
+            "id": 5,
+            "name": "Xiaojiao"
+          }, {
+            "id": 103,
+            "name": "Miduo"
+          }, {
+            "id": 106,
+            "name": "Bowen"
+          }, {
+            "id": 110,
+            "name": "Xiaotong"
+          }, {
+            "id": 111,
+            "name": "Xiaomeng"
+          }]
+        },
+        "type": "number"
+      },
+      {
+        "description": "Speech Rate",
+        "id": "speed",
+        "name": "Speed",
+        "spec": {
+          "control": "range",
+          "defaultValue": 5,
+          "min": 0,
+          "max": 15,
+          "step": 1,
+          "dispExpSwitch": false
+        },
+        "type": "number"
+      },
+      {
+        "description": "Pitch",
+        "id": "pitch",
+        "name": "Pitch",
+        "spec": {
+          "control": "range",
+          "defaultValue": 5,
+          "min": 0,
+          "max": 15,
+          "step": 1,
+          "dispExpSwitch": false
+        },
+        "type": "number"
+      },
+      {
+        "description": "Volume",
+        "id": "volume",
+        "name": "Volume",
+        "spec": {
+          "control": "range",
+          "defaultValue": 5,
+          "min": 0,
+          "max": 9,
+          "step": 1,
+          "dispExpSwitch": false
+        },
+        "type": "number"
+      }
+    ],
+    "outputs": []
+  }
+}, {
+  "id": "2kmqdh0bbqdnhqr",
+  "version": 1,
+  "name": "comment",
+  "tags": [],
+  "type": "misc",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-06-21 12:10:55.646Z",
+  "updated": "2023-08-28 07:08:11.409Z",
+  "template": {
+    "description": "Comment for the flow",
+    "id": "comment",
+    "name": "Comment",
+    "inputs": [],
+    "options": [{
+      "description": "Content of the comment",
+      "id": "comment",
+      "name": "Comment",
+      "type": "text",
+      "spec": {
+        "control": "text",
+        "rows": 3,
+        "dispExpSwitch": false
+      }
+    }],
+    "outputs": []
+  }
+}, {
+  "id": "a1mcza5baqdnne7",
+  "version": 6,
+  "name": "asrTrigger",
+  "tags": ["interaction"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-06-21 12:10:55.646Z",
+  "updated": "2023-08-28 07:08:11.409Z",
+  "template": {
+    "description": "Automatic Speech Recognition. ",
+    "id": "asrTrigger",
+    "name": "ASR",
+    "inputs": [],
+    "options": [],
+    "outputs": [{
+      "id": "commands",
+      "name": "Commands",
+      "description": "Text recognized by AI, returned in events format:\n[{\n\t\"name\": \"asr\",\n\t\"parameters\": {\n\t\t\"text\": \"Content of speech\"\n\t}\n}]",
+      "type": "json"
+    }]
+  }
+}, {
+  "id": "9kmoth3bgqdz1qr",
+  "version": 6,
+  "name": "llm",
+  "tags": ["ai"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-06-21 12:10:55.646Z",
+  "updated": "2023-08-28 07:08:11.409Z",
+  "template": {
+    "description": "Generate text by LLM",
+    "id": "llm",
+    "name": "LLM",
+    "inputs": [
+      {
+        "description": "Id of the conversation. If conversation id is empty, it will be treated as a single-turn conversation, and the context functionality will not be provided",
+        "id": "conversationId",
+        "name": "Conversation Id",
+        "type": "text",
+        "spec": {
+          "defaultValue": "default"
+        }
+      },
+      {
+        "description": "Question text",
+        "id": "question",
+        "name": "Question",
+        "type": "text"
+      }
+    ],
+    "options": [
+      {
+        "description": "The global instructions set for the LLM, that will remain continuously in effect.",
+        "id": "systemContext",
+        "name": "System Context",
+        "type": "text",
+        "spec": {
+          "rows": 3,
+          "defaultValue": "You are a helpful assistant named \"小傅\". Please engage in reasonable and friendly communication with humans."
+        }
+      },
+      {
+        "description": "Model",
+        "id": "model",
+        "name": "Model",
+        "spec": {
+          "control": "select",
+          "defaultValue": "deepseek-chat",
+          "optionSource": "chatmodel"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Temperature",
+        "id": "temperature",
+        "name": "Temperature",
+        "type": "number",
+        "spec": {
+          "defaultValue": 0.7,
+          "step": 0.01
+        }
+      },
+      {
+        "description": "If enabled, the received content will be organized based on punctuation and added to the event queue, thereby achieving rapid feedback. Otherwise, it will wait for the LLM to complete its output and return it as a single string.",
+        "id": "outputAsEvent",
+        "name": "Event Output",
+        "spec": {
+          "dispExpSwitch": false,
+          "defaultValue": false
+        },
+        "type": "boolean"
+      },
+      {
+        "description": "Variable name of the event queue. The LLM event format is: \n{\n\"name\":\"llmEvent\",\n\"timestamp\": number,\n\"parameters\"{\n\"text\":\"Text content of the LLM response\",\n\"isEnd\": boolean\n}\n}.\nThe timestamp is the time when the request was initiated. Therefore, events generated within a single request will have the same timestamp.",
+        "id": "eventQueue",
+        "name": "Event Queue",
+        "invisible": "{{!outputAsEvent}}",
+        "spec": {
+          "control": "select",
+          "optionSource": "variable"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "name": "NodeLogic",
+        "type": "any",
+        "invisible": true,
+        "readonly": true,
+        "spec": {
+          "defaultValue": "(async () => {\n\n  const handleStream = async (responseBody, eventQueueName) => {\n    const tiamestamp = Date.now();\n    if (!eventQueueName) {\n      eventQueueName = 'llmEvents';\n    }\n    let partialAnswer = '';\n    const decoder = new TextDecoder('utf-8');\n\n    return new Promise((resolve, reject) => {\n      responseBody.on('data', (chunk) => {\n        partialAnswer += decoder.decode(chunk, { stream: true });\n        \n        const punctuations = \".!?。！？，,…;；:：—\\n\";\n        let lastPunctuationIndex = -1;\n\n        for (const punctuation of punctuations) {\n          const index = partialAnswer.lastIndexOf(punctuation);\n          lastPunctuationIndex = Math.max(lastPunctuationIndex, index);\n        }\n\n        if (lastPunctuationIndex > -1) {\n          \n          const eventContent = partialAnswer.substring(0, lastPunctuationIndex + 1);\n          partialAnswer = partialAnswer.substring(lastPunctuationIndex + 1);\n          \n          // Check if the trimmed text's length is greater than or equal to 3\n          if (eventContent.trim().length >= 3) {\n            const llmEvent = {\n              name: \"llmEvent\",\n              tiamestamp,\n              parameters: {\n                text: eventContent,\n                isEnd: false\n              }\n            };\n            \n          \n            if(!flowInstanceVariables[eventQueueName]){\n              flowInstanceVariables[eventQueueName] = [];\n            }\n            flowInstanceVariables[eventQueueName].push(llmEvent);\n          } else {\n            // If the text length is less than 3, prepend it back to partialAnswer\n            partialAnswer = eventContent + partialAnswer;\n          }\n        }\n      });\n\n      responseBody.on('end', () => {\n        const llmEvent = {\n          name: \"llmEvent\",\n          tiamestamp,\n          parameters: {\n            text: partialAnswer,\n            isEnd: true\n          }\n        };\n          \n        if(!flowInstanceVariables[eventQueueName]){\n          flowInstanceVariables[eventQueueName] = [];\n        }\n        flowInstanceVariables[eventQueueName].push(llmEvent);\n        resolve();\n      });\n\n      responseBody.on('error', (error) => {\n        reject(error);\n      });\n    });\n  };\n\n  const readString = async (responseBody) => {\n    const decoder = new TextDecoder('utf-8');\n    let appendText = '';\n\n    return new Promise((resolve, reject) => {\n      responseBody.on('data', (chunk) => {\n        appendText += decoder.decode(chunk);\n      });\n\n      responseBody.on('end', () => {\n        resolve(appendText);\n      });\n\n      responseBody.on('error', (error) => {\n        reject(error);\n      });\n    });\n  };\n\n  if (typeof evaluatedInputs !== 'undefined') {\n    inputs = { ...inputs, ...evaluatedInputs };\n  }\n  if (typeof evaluatedOptions !== 'undefined') {\n    options = { ...parameters, ...evaluatedOptions };\n  } else {\n    options = { ...parameters };\n  }\n\n  const systemMessages = [\n    {\n      content: [\n        {\n          type: \"text\",\n          text: options.systemContext\n        }\n      ],\n      role: \"system\"\n    }\n  ];\n\n  const userMessages = [\n    {\n      content: [\n        {\n          type: \"text\",\n          text: inputs.question\n        }\n      ],\n      role: \"user\"\n    }\n  ];\n\n  const authorizationHeaderValue = headers.authorization;\n  const xApiKeyHeaderValue = headers['x-api-key'];\n\n  const endpoint = `${chatServiceHost}/api/chat/completions`;\n\n  const requestBody = JSON.stringify({\n    conversationId: inputs.conversationId,\n    model: options.model,\n    messages: [...systemMessages, ...userMessages],\n    temperature: options.temperature,\n  });\n\n  const response = await fetch(endpoint, {\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json',\n      ...(authorizationHeaderValue && { 'authorization': authorizationHeaderValue }),\n      ...(xApiKeyHeaderValue && { 'x-api-key': xApiKeyHeaderValue }),\n    },\n    body: requestBody\n  });\n\n  if (response.body) {\n    if (!options.outputAsEvent) {\n      const answer = await readString(response.body);\n      return { answer };\n    } else {\n      handleStream(response.body, options.eventQueue);\n      return {};\n    }\n  } else {\n    throw new Error('Response from LLM was empty.');\n  }\n})();"
+        }
+      }
+    ],
+    "outputs": [{
+      "description": "Answer text, will be empty when outputAsEvent is enabled",
+      "id": "answer",
+      "name": "Answer",
+      "type": "text"
+    }]
+  }
+}, {
+  "id": "2kmpka3baqdnhqr",
+  "version": 4,
+  "name": "knowledgebase",
+  "tags": ["ai"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-06-21 12:10:55.646Z",
+  "updated": "2023-08-28 07:08:11.409Z",
+  "template": {
+    "description": "Provide knowledge base related features",
+    "id": "knowledgebase",
+    "name": "Knowledge Base",
+    "inputs": [
+      {
+        "description": "Id of the conversation. If conversation id is empty, it will be treated as a single-turn conversation, and the context functionality will not be provided",
+        "id": "conversationId",
+        "name": "Conversation Id",
+        "type": "text",
+        "spec": {
+          "defaultValue": "default"
+        }
+      },
+      {
+        "description": "User's question",
+        "id": "question",
+        "name": "Question",
+        "type": "text"
+      }
+    ],
+    "options": [
+      {
+        "description": "The global instructions set for the LLM, that will remain continuously in effect.",
+        "id": "systemContext",
+        "name": "System Context",
+        "type": "text",
+        "spec": {
+          "rows": 3,
+          "defaultValue": "You are a humanoid robot controller, in charge of a humanoid robot named \"小傅\". Please engage in reasonable and friendly communication with humans."
+        }
+      },
+      {
+        "description": "Model",
+        "id": "model",
+        "name": "Model",
+        "spec": {
+          "control": "select",
+          "defaultValue": "deepseek-chat",
+          "optionSource": "chatmodel"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Global instructions that guide the LLM on how to handle information retrieved from knowledge base. It is provided to the LLM right after the System Context. The {{knowledge}} tag within it will be replaced with the content retrieved from the knowledge base.",
+        "id": "knowledgebaseContext",
+        "name": "Knowledgebase Context",
+        "type": "text",
+        "spec": {
+          "rows": 3,
+          "defaultValue": "Please summarize the content of the knowledge base to answer the question. Please list the data in the knowledge base and answer in detail. When all knowledge base content is irrelevant to the question, your answer must include the sentence \"抱歉，您的问题不在我的服务范围内。请问还有其他问题需要帮助吗？\" Answers need to consider chat history.\n      Here is the knowledge base:\n      {{knowledge}}\n      The above is the knowledge base."
+        }
+      },
+      {
+        "description": "Knowledge base to query",
+        "id": "knowledgebase",
+        "name": "Knowledge Base",
+        "spec": {
+          "control": "select",
+          "optionSource": "knowledgebase"
+        },
+        "type": "text"
+      },
+      {
+        "description": "The randomness of the output content",
+        "id": "temperature",
+        "name": "Temperature",
+        "spec": {
+          "defaultValue": 0.7,
+          "step": 0.01
+        },
+        "type": "number"
+      },
+      {
+        "description": "If enabled, the received content will be organized based on punctuation and added to the event queue, thereby achieving rapid feedback. Otherwise, it will wait for the LLM to complete its output and return it as a single string.",
+        "id": "outputAsEvent",
+        "name": "Event Output",
+        "spec": {
+          "dispExpSwitch": false,
+          "defaultValue": false
+        },
+        "type": "boolean"
+      },
+      {
+        "description": "Variable name of the event queue. The LLM event format is: \n{\n\"name\":\"llmEvent\",\n\"timestamp\": number,\n\"parameters\"{\n\"text\":\"Text content of the LLM response\",\n\"isEnd\": boolean\n}\n}.\nThe timestamp is the time when the request was initiated. Therefore, events generated within a single request will have the same timestamp.",
+        "id": "eventQueue",
+        "name": "Event Queue",
+        "invisible": "{{!outputAsEvent}}",
+        "spec": {
+          "control": "select",
+          "optionSource": "variable"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "name": "NodeLogic",
+        "type": "any",
+        "invisible": true,
+        "readonly": true,
+        "spec": {
+          "defaultValue": "(async () => {\n  const handleStream = async (responseBody, eventQueueName) => {\n    const tiamestamp = Date.now();\n    if (!eventQueueName) {\n      eventQueueName = 'llmEvents';\n    }\n    let partialAnswer = '';\n    const decoder = new TextDecoder('utf-8');\n\n    return new Promise((resolve, reject) => {\n      responseBody.on('data', (chunk) => {\n        partialAnswer += decoder.decode(chunk, { stream: true });\n        \n        const punctuations = \".!?。！？，,…;；:：—\\n\";\n        let lastPunctuationIndex = -1;\n\n        for (const punctuation of punctuations) {\n          const index = partialAnswer.lastIndexOf(punctuation);\n          lastPunctuationIndex = Math.max(lastPunctuationIndex, index);\n        }\n\n        if (lastPunctuationIndex > -1) {\n          \n          const eventContent = partialAnswer.substring(0, lastPunctuationIndex + 1);\n          partialAnswer = partialAnswer.substring(lastPunctuationIndex + 1);\n          \n          // Check if the trimmed text's length is greater than or equal to 3\n          if (eventContent.trim().length >= 3) {\n            const llmEvent = {\n              name: \"llmEvent\",\n              tiamestamp,\n              parameters: {\n                text: eventContent,\n                isEnd: false\n              }\n            };\n            \n          \n            if(!flowInstanceVariables[eventQueueName]){\n              flowInstanceVariables[eventQueueName] = [];\n            }\n            flowInstanceVariables[eventQueueName].push(llmEvent);\n          } else {\n            // If the text length is less than 3, prepend it back to partialAnswer\n            partialAnswer = eventContent + partialAnswer;\n          }\n        }\n      });\n\n      responseBody.on('end', () => {\n        const llmEvent = {\n          name: \"llmEvent\",\n          tiamestamp,\n          parameters: {\n            text: partialAnswer,\n            isEnd: true\n          }\n        };\n          \n        if(!flowInstanceVariables[eventQueueName]){\n          flowInstanceVariables[eventQueueName] = [];\n        }\n        flowInstanceVariables[eventQueueName].push(llmEvent);\n        resolve();\n      });\n\n      responseBody.on('error', (error) => {\n        reject(error);\n      });\n    });\n  };\n\n  const readString = async (responseBody) => {\n    const decoder = new TextDecoder('utf-8');\n    let appendText = '';\n\n    return new Promise((resolve, reject) => {\n      responseBody.on('data', (chunk) => {\n        appendText += decoder.decode(chunk);\n      });\n\n      responseBody.on('end', () => {\n        resolve(appendText);\n      });\n\n      responseBody.on('error', (error) => {\n        reject(error);\n      });\n    });\n  };\n\n  if (typeof evaluatedInputs !== 'undefined') {\n    inputs = { ...inputs, ...evaluatedInputs };\n  }\n  if (typeof evaluatedOptions !== 'undefined') {\n    options = { ...parameters, ...evaluatedOptions };\n  } else {\n    options = { ...parameters };\n  }\n\n  const systemMessages = [\n    {\n      content: [\n        {\n          type: \"text\",\n          text: `${options.systemContext}\n${options.knowledgebaseContext}`\n        }\n      ],\n      role: \"system\"\n    }\n  ];\n\n  const userMessages = [\n    {\n      content: [\n        {\n          type: \"text\",\n          text: inputs.question\n        }\n      ],\n      role: \"user\"\n    }\n  ];\n\n  const authorizationHeaderValue = headers.authorization;\n  const xApiKeyHeaderValue = headers['x-api-key'];\n\n  const endpoint = `${chatServiceHost}/api/chat/completions`;\n\n  const requestBody = JSON.stringify({\n    conversationId: inputs.conversationId,\n    model: options.model,\n    kbId: options.knowledgebase,\n    messages: [...systemMessages, ...userMessages],\n    temperature: options.temperature,\n  });\n\n  const response = await fetch(endpoint, {\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json',\n      ...(authorizationHeaderValue && { 'authorization': authorizationHeaderValue }),\n      ...(xApiKeyHeaderValue && { 'x-api-key': xApiKeyHeaderValue }),\n    },\n    body: requestBody\n  });\n\n  if (response.body) {\n    if (!options.outputAsEvent) {\n      const answer = await readString(response.body);\n      return { answer };\n    } else {\n      handleStream(response.body, options.eventQueue);\n      return {};\n    }\n  } else {\n    throw new Error('Response from LLM was empty.');\n  }\n})();"
+        }
+      }
+    ],
+    "outputs": [
+      {
+        "description": "Answer provided by LLM, will be empty when outputAsEvent is enabled",
+        "id": "answer",
+        "name": "Answer",
+        "type": "text"
+      }
+    ]
+  }
+}, {
+  "id": "2kmbkccb1qqnh9r",
+  "version": 9999,
+  "name": "brain",
+  "tags": ["ai"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-06-21 12:10:55.646Z",
+  "updated": "2023-08-28 07:08:11.409Z",
+  "template": {
+    "description": "Utilizes an LLM as the robot's brain for thinking, control, and other functions, responding appropriately to inputs based on a predefined list of actions.",
+    "id": "brain",
+    "name": "Brain",
+    "inputs": [
+      {
+        "description": "The conversation ID. If empty, it will be treated as a single-turn conversation, and context functionality will not be provided.",
+        "id": "conversationId",
+        "name": "Conversation ID",
+        "type": "text",
+        "spec": {
+          "defaultValue": "defaultActions"
+        }
+      },
+      {
+        "description": "User's request",
+        "id": "request",
+        "name": "Request",
+        "type": "text"
+      }
+    ],
+    "options": [
+      {
+        "description": "Global instructions for the LLM that remain continuously in effect.",
+        "id": "systemContext",
+        "name": "System Context",
+        "type": "text",
+        "spec": {
+          "rows": 3,
+          "defaultValue": "You are a humanoid robot controller, in charge of a humanoid robot named \"小傅\".\nPlease engage in reasonable and friendly communication with humans. Please select appropriate commands and parameters based on the user‘s input, in order to control the humanoid to complete the response.\n\nConstraints:\n1. Replies must use only the command list in JSON list format as below:\n[{\n\"name\": \"command_name\",\n\"parameters\": \n  {\n  \"key1\": \"value1\",\n  \"key2\": \"value2\"\n  }\n}]\nparameters are optional.\n2. Use only the commands listed below.\n3. Only reply with pure json, no comments or explanation.\n\nFor example:\nInput: 你好\nOutput:\n[\n{\"name\": \"emoji\",\"parameters\": {\"emoji\": \"happy\"}},\n{\"name\": \"talk\",\"parameters\": {\"words\": \"您好，吃了吗您呢？\"}},\n{\"name\": \"upperBodyAction\",\"parameters\": {\"arm_action\": \"HELLO\"}}\n]\n\nInput: 向前走两步\nOutput:\n[\n{\"name\": \"emoji\",\"parameters\": {\"emoji\": \"idle\"}},\n{\"name\": \"walk\",\"parameters\": {\"speed\": 0.5,\"angle\": 0}},\n{\"name\": \"delay\",\"parameters\": {\"time\": 2000}},\n{\"name\": \"stand\"}\n]\n\n\nAvailable commands list:\n{{actions}}\nThe supported actions for this humanoid robot must be limited to the action list above.\n\n"
+        }
+      },
+      {
+        "description": "Model to be used",
+        "id": "model",
+        "name": "Model",
+        "spec": {
+          "control": "select",
+          "defaultValue": "deepseek-chat",
+          "optionSource": "chatmodel"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Defines the actions supported by the robot",
+        "id": "actions",
+        "name": "Available Actions",
+        "spec": {
+          "dispExpSwitch": false,
+          "control": "actionList",
+          "defaultValue": [
+            {
+              "name": "talk",
+              "prompt": "Interact with people based on contextual information. Has one parameter: \n    words - The content the robot will say. In string type."
+            }
+          ]
+        },
+        "type": "json"
+      },
+      {
+        "description": "Allow the robot to query the knowledge base before responding to the user.",
+        "id": "enableKnowledgebase",
+        "name": "Enable Knowledge Base",
+        "type": "boolean",
+        "spec": {
+          "dispExpSwitch": false,
+          "defaultValue": false
+        }
+      },
+      {
+        "description": "Global instructions for how the LLM should handle information retrieved from the knowledge base. Provided to the LLM immediately following the System Context. The {{knowledge}} tag within this text will be replaced with the content retrieved from the knowledge base.",
+        "id": "knowledgebaseContext",
+        "name": "Knowledge Base Context",
+        "type": "text",
+        "invisible": "{{!enableKnowledgebase}}",
+        "spec": {
+          "rows": 3,
+          "defaultValue": "Besides dialogues related to control and interaction, which you may decide on your own, you should limit your responses to information obtained from the knowledge base below for any knowledge-related queries from the user. If the user's question is outside the scope of your service or not covered by the information in the knowledge base, you should politely respond, \"抱歉，您的问题不在我的服务范围内。请问还有其他问题需要帮助吗？\"\nHere is the knowledge base: \n{{knowledge}}\nThe above text is the knowledge base."
+        }
+      },
+      {
+        "description": "Knowledge base to query",
+        "id": "knowledgebase",
+        "name": "Knowledge Base",
+        "invisible": "{{!enableKnowledgebase}}",
+        "spec": {
+          "control": "select",
+          "optionSource": "knowledgebase"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Controls the randomness of the output content",
+        "id": "temperature",
+        "name": "Temperature",
+        "spec": {
+          "defaultValue": 0.7,
+          "step": 0.01
+        },
+        "type": "number"
+      },
+      {
+        "description": "If enabled, generated actions will be added to the event queue as events for rapid feedback. Otherwise, the LLM will complete its output and return the result as a whole.",
+        "id": "outputAsEvent",
+        "name": "Event Output",
+        "type": "boolean",
+        "spec": {
+          "dispExpSwitch": false,
+          "defaultValue": false
+        }
+      },
+      {
+        "description": "Variable name of the event queue. The format for action events is: \n{\n\"name\":\"ACTION\",\n\"timestamp\": number,\n\"parameters\":{\nPARAMETERS_DEPENDS_ON_ACTION\n}}.\nThe timestamp is the time when the request was initiated. Therefore, events generated within a single request will have the same timestamp.\n",
+        "id": "eventQueue",
+        "name": "Event Queue",
+        "invisible": "{{!outputAsEvent}}",
+        "spec": {
+          "control": "select",
+          "optionSource": "variable"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "name": "NodeLogic",
+        "type": "any",
+        "invisible": true,
+        "readonly": true,
+        "spec": {
+          "defaultValue": "(async () => {\n  const handleStream = async (responseBody, eventQueueName = 'llmEvents') => {\n    const timestamp = Date.now();\n    const decoder = new TextDecoder('utf-8');\n    let isFirstEvent = true;\n    let buffer = '';\n    let partialElement = false;\n    let talkProcessedIndex = 0;\n    let talkBuffer = '';\n    const punctuations = \".!?。！？，,…;；:：—\\n\";\n\n    const addEvent = (name, parameters) => {\n      const event = { name, timestamp, parameters };\n      if (!flowInstanceVariables[eventQueueName]) {\n        flowInstanceVariables[eventQueueName] = [];\n      }\n      flowInstanceVariables[eventQueueName].push(event);\n      isFirstEvent = false;\n    };\n\n    const processTalkBuffer = (words) => {\n      talkBuffer = words;\n      const talkPartialBuffer = words.substring(talkProcessedIndex);\n\n      if(partialElement){\n        // Partial element is still in progress, split it.\n        let lastPunctuationIndex = -1;\n        for (const punctuation of punctuations) {\n          const index = talkPartialBuffer.lastIndexOf(punctuation);\n          lastPunctuationIndex = Math.max(lastPunctuationIndex, index);\n        }\n\n        if (lastPunctuationIndex !== -1) {\n          const eventContent = talkPartialBuffer.substring(0, lastPunctuationIndex + 1);\n          talkProcessedIndex += eventContent.length;\n          addEvent('talk', { words: eventContent, isEnd: !partialElement });\n        }\n      } else {\n        addEvent('talk', { words: talkPartialBuffer, isEnd: !partialElement });\n        talkBuffer = '';\n        talkProcessedIndex = 0;\n      }\n    };\n\n    return new Promise((resolve, reject) => {\n      responseBody.on('data', (chunk) => {\n        buffer += decoder.decode(chunk, { stream: true });\n\n        const startBracket = isFirstEvent ? '' : '[';\n        if(!isFirstEvent && buffer.trim().startsWith(\",\")){\n          buffer = buffer.substring(buffer.indexOf(\",\") + 1);\n        }\n        let jsonArray = [];\n        try {\n          // Check whether got a complete JSON array\n          jsonArray = JSON.parse(startBracket + buffer);\n          partialElement = false;\n          buffer = '';\n        } catch (error) {\n          let closeBracketIndex = buffer.length;\n          while( (closeBracketIndex = buffer.lastIndexOf('}', closeBracketIndex-1))>=0){\n            // Try to close the JSON object after a '}'\n            const partialBuffer = buffer.substring(0, closeBracketIndex + 1);\n            try {\n              jsonArray = JSON.parse(startBracket + partialBuffer + ']');\n              // Successfully parsed the JSON array, emit the event\n              buffer = buffer.substring(closeBracketIndex + 1);\n              partialElement = false;\n              break;\n            } catch (error) {\n              // Loop through all '}'\n            }\n          }\n          if(jsonArray.length === 0){\n            // No valid JSON object yet, try to append '\"}}]' and try JSON.parse, check whether we are in talk event\n            let tryFixIndex = buffer.length;\n            while(tryFixIndex >= 0){\n              const partialBuffer = buffer.substring(0, tryFixIndex);\n              try {\n                jsonArray = JSON.parse(startBracket + partialBuffer + '\"}}]');\n                // Constructed a JSON object\n                if (jsonArray[jsonArray.length - 1].name === 'talk') {\n                  isFirstEvent = false;\n                  // Got part of talk, keep buffer for the talk element\n                  let talkEventBuffer = JSON.stringify(jsonArray[jsonArray.length - 1]);\n                  const lastQuote = talkEventBuffer.lastIndexOf('\"');\n\n                  if (lastQuote !== -1) {\n                    talkEventBuffer = talkEventBuffer.substring(0, lastQuote);\n                  }\n                  buffer = talkEventBuffer + buffer.substring(tryFixIndex);\n                  partialElement = true;\n                } else {\n                  // Happened close element of other type, ignore it, wait for the element to complete\n                  jsonArray=[];\n                }\n                break;\n              } catch (error) {\n                tryFixIndex--;\n              }\n            }\n          }\n        }\n        if (jsonArray.length > 0) {\n          jsonArray.forEach(event => {\n            // Emit the event\n            if (event.name === 'talk') {\n              processTalkBuffer(event.parameters.words);\n            } else {\n              addEvent(event.name, event.parameters);\n            }\n          });\n        }\n      });\n\n      responseBody.on('end', () => {\n        // Send any remaining \"talk\" buffer content as the final event\n        if (partialElement) {\n          partialElement = false;\n          processTalkBuffer(talkBuffer);\n        }\n        resolve();\n      });\n\n      responseBody.on('error', (error) => {\n        reject(error);\n      });\n    });\n  };\n\n  const readString = async (responseBody) => {\n    const decoder = new TextDecoder('utf-8');\n    let appendText = '';\n\n    return new Promise((resolve, reject) => {\n      responseBody.on('data', (chunk) => {\n        appendText += decoder.decode(chunk);\n      });\n\n      responseBody.on('end', () => {\n        resolve(appendText);\n      });\n\n      responseBody.on('error', (error) => {\n        reject(error);\n      });\n    });\n  };\n\n  if (typeof evaluatedInputs !== 'undefined') {\n    inputs = { ...inputs, ...evaluatedInputs };\n  }\n  if (typeof evaluatedOptions !== 'undefined') {\n    options = { ...parameters, ...evaluatedOptions };\n  } else {\n    options = { ...parameters };\n  }\n\n  const enableKnowledgebase = options.enableKnowledgebase;\n  // Set available actions in system context\n  const systemContext = options.systemContext.replaceAll(\"{{actions}}\", JSON.stringify(options.actions));\n\n  const systemMessages = [\n    {\n      content: [\n        {\n          type: \"text\",\n          text: enableKnowledgebase ? `${systemContext}\n${options.knowledgebaseContext}` : systemContext\n        }\n      ],\n      role: \"system\"\n    }\n  ];\n\n  const userMessages = [\n    {\n      content: [\n        {\n          type: \"text\",\n          text: inputs.request\n        }\n      ],\n      role: \"user\"\n    }\n  ];\n\n  const authorizationHeaderValue = headers.authorization;\n  const xApiKeyHeaderValue = headers['x-api-key'];\n\n  const endpoint = `${chatServiceHost}/api/chat/completions`;\n\n  const requestBody = JSON.stringify({\n    conversationId: inputs.conversationId,\n    model: options.model,\n    kbId: options.knowledgebase,\n    messages: [...systemMessages, ...userMessages],\n    temperature: options.temperature,\n  });\n\n  const response = await fetch(endpoint, {\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json',\n      ...(authorizationHeaderValue && { 'authorization': authorizationHeaderValue }),\n      ...(xApiKeyHeaderValue && { 'x-api-key': xApiKeyHeaderValue }),\n    },\n    body: requestBody\n  });\n\n  if (response.body) {\n    if (!options.outputAsEvent) {\n      const actions = await readString(response.body);\n      return { actions };\n    } else {\n      handleStream(response.body, options.eventQueue);\n      return {};\n    }\n  } else {\n    throw new Error('Response from LLM was empty.');\n  }\n})();"
+        }
+      }
+    ],
+    "outputs": [
+      {
+        "description": "Actions to perform based on input",
+        "id": "actions",
+        "name": "Actions",
+        "type": "json"
+      }
+    ]
+  }
+}, {
+  "id": "9vu0uz4351wo7gx",
+  "version": 9999,
+  "name": "visionTrigger",
+  "tags": ["interaction"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-30 10:28:44.336Z",
+  "updated": "2023-09-16 03:53:14.619Z",
+  "template": {
+    "description": "Trigger commands based on vision information",
+    "id": "visionTrigger",
+    "name": "Vision Trigger",
+    "inputs": [],
+    "options": [
+      {
+        "description": "Commands understood by the robot",
+        "id": "cmd",
+        "name": "Command",
+        "invisible": true,
+        "spec": {
+          "control": "select",
+          "options": []
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": [{
+      "id": "commands",
+      "name": "Commands",
+      "description": "Commands triggered by the vision",
+      "type": "json"
+    }]
+  }
+}, {
+  "id": "9vu7am4355wo2gx",
+  "version": 3,
+  "name": "joystickTrigger",
+  "tags": ["interaction"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-08-29 10:28:44.336Z",
+  "updated": "2023-09-15 03:53:14.619Z",
+  "template": {
+    "description": "Dispatch commands based on joystick events",
+    "id": "joystickTrigger",
+    "name": "Joystick Trigger",
+    "inputs": [],
+    "options": [],
+    "outputs": [{
+      "id": "commands",
+      "name": "Commands",
+      "description": "Commands triggered by the joystick",
+      "type": "json"
+    }]
+  }
+}, {
+  "id": "2nm9qz4baza1h3r",
+  "version": 3,
+  "name": "emoji",
+  "tags": ["interaction"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-06-21 12:10:55.646Z",
+  "updated": "2023-08-28 07:08:11.409Z",
+  "template": {
+    "description": "Make facial expressions to people",
+    "id": "emoji",
+    "name": "Emoji",
+    "inputs": [
+      {
+        "description": "The expression to show",
+        "id": "emoji",
+        "name": "Emoji",
+        "spec": {
+          "control": "select",
+          "defaultValue": "idle",
+          "options": [
+            {
+              "id": "error",
+              "name": "Error"
+            },
+            {
+              "id": "happy",
+              "name": "Happy"
+            },
+            {
+              "id": "idle",
+              "name": "Idle"
+            },
+            {
+              "id": "input",
+              "name": "Input"
+            },
+            {
+              "id": "loading",
+              "name": "Loading"
+            },
+            {
+              "id": "output",
+              "name": "Output"
+            },
+            {
+              "id": "sleep",
+              "name": "Sleep"
+            },
+            {
+              "id": "ccbHappy",
+              "name": "CCB Happy"
+            },
+            {
+              "id": "ccbHappy1",
+              "name": "CCB Happy 1"
+            },
+            {
+              "id": "roundedError",
+              "name": "Rounded Error"
+            },
+            {
+              "id": "roundedIdle",
+              "name": "Rounded Idle"
+            },
+            {
+              "id": "roundedInput",
+              "name": "Rounded Input"
+            },
+            {
+              "id": "roundedInputNormal",
+              "name": "Rounded Input Normal"
+            },
+            {
+              "id": "roundedLoading",
+              "name": "Rounded Loading"
+            },
+            {
+              "id": "roundedNormal",
+              "name": "Rounded Normal"
+            },
+            {
+              "id": "roundedNormalInput",
+              "name": "Rounded Normal Input"
+            },
+            {
+              "id": "roundedNormalInputLoadingOutputNormal",
+              "name": "Rounded All Loop"
+            },
+            {
+              "id": "roundedNormalLoading",
+              "name": "Rounded Normal Loading"
+            },
+            {
+              "id": "roundedNormalLoading1",
+              "name": "Rounded Normal Loading 1"
+            },
+            {
+              "id": "roundedOutput",
+              "name": "Rounded Output"
+            },
+            {
+              "id": "roundedSpeaking",
+              "name": "Rounded Speaking"
+            }
+          ]
+        },
+        "type": "text"
+      }
+    ],
+    "options": [
+      {
+        "description": "Host of the head",
+        "id": "host",
+        "name": "Host",
+        "spec": {
+          "defaultValue": "192.168.137.250"
+        },
+        "type": "text"
+      },
+      {
+        "description": "Node logic",
+        "id": "evalCode",
+        "invisible": true,
+        "name": "NodeLogic",
+        "readonly": true,
+        "spec": {
+          "defaultValue": "(async () => {\n  try {\n    if (typeof evaluatedInputs !== 'undefined') {\n      inputs = { ...inputs, ...evaluatedInputs };\n    }\n    if (typeof evaluatedOptions !== 'undefined') {\n      options = { ...parameters, ...evaluatedOptions };\n    } else {\n      options = { ...parameters };\n    }\n    const response = await fetch(`http://${options.host}:8080/twin`, {\n      method: 'PUT',\n      headers: { 'content-type': 'application/json' },\n      body: JSON.stringify({\n        properties: {\n          desired: {\n            emotion: inputs.emoji\n          }\n        }\n      })\n    });\n    if (response.ok) {\n      return {\n        done: true\n      };\n    } else {\n      throw new Error(`${response.status} ${response.statusText}`);\n    }\n  } catch (error) {\n    console.error(error);\n    throw error;\n  }\n})()",
+          "rows": "3"
+        },
+        "type": "text"
+      }
+    ],
+    "outputs": []
+  }
+}, {
+  "id": "zkm3bz4baq32heq",
+  "version": 4,
+  "name": "voice",
+  "tags": ["interaction"],
+  "type": "function",
+  "access_level": 1,
+  "owner": "",
+  "icon": "",
+  "created": "2023-06-21 12:10:55.646Z",
+  "updated": "2023-08-28 07:08:11.409Z",
+  "template": {
+    "description": "Play specified audio through speaker.",
+    "id": "voice",
+    "name": "Play Voice",
+    "inputs": [
+      {
+        "description": "The url or path of audio file to play",
+        "id": "voice_path",
+        "name": "Voice Path",
+        "type": "text"
+      }
+    ],
+    "options": [
+      {
+        "description": "The url of audio file to play",
+        "id": "voice_type",
+        "name": "Path Type",
+        "type": "text",
+        "spec": {
+          "control": "select",
+          "defaultValue": "filename",
+          "options": [
+            {
+              "id": "filename",
+              "name": "Relative path"
+            }
+          ]
+        }
+      },
+      {
+        "description": "The audio file type",
+        "id": "file_type",
+        "name": "Audio Type",
+        "type": "text",
+        "spec": {
+          "control": "select",
+          "defaultValue": "wav",
+          "options": [
+            {
+              "id": "wav",
+              "name": "WAV"
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": []
+  }
+}]

@@ -1,0 +1,28 @@
+---
+id: kv3p6ryrcnozk62
+slug: moveJointsByInterpolation
+---
+
+# Move Joints By Interpolation
+
+**Description**: Smoothly perform joint movements using interpolation
+
+**Type**: robot
+
+## Inputs
+
+| Name | Type | Description |
+| --- | --- | --- |
+| **Joints** | json | An array of motors specifying the joints to be moved |
+| **Offset** | number | The angle of rotation of the motor at each interval of time |
+| **Interval** | number | Interval of time for each movement interpolation |
+## Outputs
+
+| Name | Type | Description |
+| --- | --- | --- |
+## Options
+
+| Name | Type | Description |
+| --- | --- | --- |
+| **NodeLogic** | text | Node logic |
+| **Sync** | boolean | Synchronous call. If yes, wait until the motion is completed before returning. |

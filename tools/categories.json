@@ -1,0 +1,12 @@
+{
+  "ai": "Artificial Intelligence",
+  "txt2img": "Text to Image",
+  "autogen": "Auto Generation",
+  "net": "Networking",
+  "txt2txt": "Text to Text",
+  "motor": "Motor Control",
+  "program": "Programming",
+  "interaction": "Interaction",
+  "management": "Management",
+  "control": "Robot Control"
+}

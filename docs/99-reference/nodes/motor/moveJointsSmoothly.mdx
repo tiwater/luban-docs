@@ -1,0 +1,28 @@
+---
+id: f35jhkbxjqqzpgz
+slug: moveJointsSmoothly
+---
+
+# Move Joints Smoothly By Time
+
+**Description**: Smoothly perform joint movements using interpolation within a specified time
+
+**Type**: robot
+
+## Inputs
+
+| Name | Type | Description |
+| --- | --- | --- |
+| **Joints** | json | An array of motors specifying the joints to be moved |
+| **Time** | number | The duration to complete the movements (in second) |
+| **Interval** | number | Interval of time for each movement interpolation |
+## Outputs
+
+| Name | Type | Description |
+| --- | --- | --- |
+## Options
+
+| Name | Type | Description |
+| --- | --- | --- |
+| **NodeLogic** | text | Node logic |
+| **Sync** | boolean | Synchronous call. If yes, wait until the motion is completed before returning. |

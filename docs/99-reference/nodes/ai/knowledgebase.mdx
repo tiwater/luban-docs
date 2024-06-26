@@ -1,0 +1,38 @@
+---
+id: 2kmpka3baqdnhqr
+slug: knowledgebase
+---
+
+# Knowledge Base
+
+**Description**: Provide knowledge base related features
+
+**Type**: function
+
+## Inputs
+
+| Name | Type | Description |
+| --- | --- | --- |
+| **Conversation Id** | text | Id of the conversation. If conversation id is empty, it will be treated as a single-turn conversation, and the context functionality will not be provided |
+| **Question** | text | User's question |
+## Outputs
+
+| Name | Type | Description |
+| --- | --- | --- |
+| **Answer** | text | Answer provided by LLM, will be empty when outputAsEvent is enabled |
+## Options
+
+| Name | Type | Description |
+| --- | --- | --- |
+| **System Context** | text | The global instructions set for the LLM, that will remain continuously in effect. |
+| **Model** | text | Model |
+| **Knowledgebase Context** | text | ```json
+"Global instructions that guide the LLM on how to handle information retrieved from knowledge base. It is provided to the LLM right after the System Context. The &#123;&#123;knowledge&#125;&#125; tag within it will be replaced with the content retrieved from the knowledge base."
+``` |
+| **Knowledge Base** | text | Knowledge base to query |
+| **Temperature** | number | The randomness of the output content |
+| **Event Output** | boolean | If enabled, the received content will be organized based on punctuation and added to the event queue, thereby achieving rapid feedback. Otherwise, it will wait for the LLM to complete its output and return it as a single string. |
+| **Event Queue** | text | ```json
+"Variable name of the event queue. The LLM event format is: \n&#123;\n\"name\":\"llmEvent\",\n\"timestamp\": number,\n\"parameters\"&#123;\n\"text\":\"Text content of the LLM response\",\n\"isEnd\": boolean\n&#125;\n&#125;.\nThe timestamp is the time when the request was initiated. Therefore, events generated within a single request will have the same timestamp."
+``` |
+| **NodeLogic** | any | Node logic |

@@ -9,6 +9,36 @@ It's necessary to process the data during the workflow. This is where the data p
 
 The data processing nodes are used to manipulate the data in various ways. They are used to transform the data from one format to another, filter the data, and perform calculations on the data.
 
-## Math
+## Array Mainpulation
+
+Array manipulation is a common task in data processing. The data processing nodes in Fourier Builder provide a variety of functions to manipulate arrays. These functions include sorting, filtering, and transforming arrays.
+
+The supported nodes are:
+
+- **Add Array Element**: Add an element to an array.
+- **Remove Array Element**: Remove an element from an array.
+- **Get Array Element**: Get an element from an array.
+- **Get Array Length**: Get the length of an array.
 
 ## String Mainpulation
+
+String is a common data type in data processing for robots. When robot needs to speak, it needs string as the input. The string manipulation nodes in Fourier Builder provide a variety of functions to manipulate strings. For now we provide only **String Conact** node for the concatention of strings. More features are to come.
+
+Another use case is to generate a string from a template. For example, you can generate a string from a template by replacing the placeholders in the template with the actual values. We provide a **String Manipulation** node to do this.
+
+## Expression Evaluation
+
+During the data processing, you may need to evaluate an expression. The expression evaluation nodes in Fourier Builder provide a variety of functions to evaluate expressions. These functions include arithmetic operations, logical operations, and comparison operations.
+
+For example, you can evaluate an expression to calculate the sum of two numbers, or to check if a number is greater than another number. We can use **Expression** node for the evaluation of expressions.
+
+## Variables
+
+Variables are used to store data during the workflow. The variable nodes in Fourier Builder provide a variety of functions to store and retrieve variables. These functions include setting a variable, getting a variable, and deleting a variable.
+
+The supported nodes are:
+
+- **Let**: Set a variable with a value.
+- **Get**: Get a variable value.
+
+We can also use **Entity** to build a composite data structure, and use **Set Property** and **Get Property** to manipulate the data, and use **Serialize** and **Deserialize** to convert the data to and from JSON.

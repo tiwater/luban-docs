@@ -5,33 +5,73 @@ sidebar_position: 99
 
 # Extensibility
 
-Workflow templates are a way to create a new workflow with a predefined structure. You can use them to create a new workflow with a specific structure and configuration.
+As mentioned earlier, we can use templates to make the workflow reusable. However, there are cases where we need to create a custom node to perform a specific task. For example, we may need to create a custom node to interact with a specific API, or to perform a specific calculation.
 
-## Build from Template
+In Fourier Builder, each node is defined with a JSON schema. This schema defines the inputs and outputs of the node, as well as the properties of the node. The schema is used to generate the UI for the node, as well as to validate the inputs and outputs of the node.
 
-To create a new workflow from a template, follow these steps:
+Let us choose one node and see how it is defined in the JSON schema.
 
-1. Click the `New Workflow` button in the top right corner of the application.
-2. Select the template you want to use from the list of available templates.
-3. Click the `Create` button to create a new workflow with the selected template.
+```json
+{
+  "description": "Set value of a variable",
+  "id": "let",
+  "inputs": [],
+  "name": "Let",
+  "options": [
+    {
+      "description": "Node logic",
+      "id": "evalCode",
+      "invisible": true,
+      "name": "NodeLogic",
+      "readonly": true,
+      "spec": {
+        "defaultValue": "\n(\n  async ()=>{\n\n\n\n// *** User code start ***\nconst variableName=options.variable;\nconst variableValue=options.value;\n\ncustomVariables[variableName] = variableValue;\n\nreturn {\n  value: variableValue,\n}\n// *** User code end ***\n  }\n)()\n",
+        "rows": "3"
+      },
+      "type": "text"
+    },
+    {
+      "description": "Variable Name",
+      "id": "variable",
+      "invisible": false,
+      "name": "Variable Name",
+      "readonly": false,
+      "spec": {
+        "control": "select",
+        "defaultValue": "gpt-4",
+        "optionSource": "chatmodel",
+        "rows": "3"
+      },
+      "type": "text"
+    },
+    {
+      "description": "Variable Value",
+      "id": "value",
+      "invisible": false,
+      "name": "Variable Value",
+      "readonly": false,
+      "spec": {
+        "defaultValue": "",
+        "rows": "3"
+      },
+      "type": "text"
+    }
+  ],
+  "outputs": [
+    {
+      "description": "The value set to the variable",
+      "id": "value",
+      "name": "Variable Value",
+      "spec": {
+        "defaultValue": "",
+        "rows": "3"
+      },
+      "type": "text"
+    }
+  ]
+}
+```
 
-## Publish Template
+From the above JSON schema, we can see that the node has three properties: `Variable Name`, `Variable Value`, and `Node Logic`. The `Variable Name` and `Variable Value` properties are used to set the name and value of the variable, while the `Node Logic` property is used to define the logic of the node. Inputs and outputs are defined as well.
 
-If you have created a workflow that you think others might find useful, you can publish it as a template. To publish a workflow as a template, follow these steps:
-
-1. Open the workflow you want to publish as a template.
-2. Click the `Publish as Template` button in the top right corner of the application.
-3. Enter a name and description for the template.
-
-After publishing the template, it will be available to other users when creating a new workflow.
-
-## Manage templates
-
-You can manage your templates from the `Templates` tab in the application. From here, you can view, edit, and delete your templates.
-
-To view the list of available templates, click the `Templates` tab in the application. From here, you can see a list of all the templates available to you.
-
-To edit a template, click the `Edit` button next to the template you want to edit. From here, you can make changes to the template and save your changes.
-
-To delete a template, click the `Delete` button next to the template you want to delete. You will be prompted to confirm the deletion before the template is deleted.
-
+The feature to create custom nodes is not yet available in Fourier Builder. However, we are working on it and it will be available soon. Stay tuned for updates!

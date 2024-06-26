@@ -35,6 +35,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
+          exclude: ['**/98-advanced-guides/**'],
         },
         blog: {
           showReadingTime: true,
