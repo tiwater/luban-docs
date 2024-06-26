@@ -2,15 +2,29 @@
 sidebar_position: 7
 ---
 
-
 # Debugging
 
-It's the main area of the application. It is where you can view and edit your project files.
+Fourier Builder includes integrated debugging features to help you identify and resolve issues within your graph. This section provides an overview of the debugging tools available in Fourier Builder.
 
-## Debugging
+Clicking "Run" will launch the workflow in Debug mode. The Debug mode offers the following features:
 
+- **Variable Inspection**: Inspect the values of variables at each node in the graph.
+- **Node Status**: View the status of each node in the graph, which can be:
+  - **Running**: The node is currently running.
+  - **Success**: The node has completed successfully.
+  - **Failed**: The node has failed.
+- **Node Output**: View the output of each node in the graph.
+- **Node Error**: View the error message if a node fails.
 
-## Watch Node
+## Output Inspection
 
-We can add a watch node to the workflow to see the output of the function node. The watch node will display the output of the function node in the debug panel.
+We provide a set of debugging nodes to visualize the output of a node. These nodes are useful for understanding and debugging the output data. The debugging nodes are:
 
+- **Image Previewer**: Displays the image output of a node.
+- **Text Previewer**: Displays the text output of a node.
+
+## Variable Inspection
+
+Hovering over the input and output ports of a node will display the value of the variable connected to the port. This feature helps you understand the flow of data within the graph.
+
+While workflow debugging in Fourier Builder is designed to be straightforward, we currently do not support more advanced debugging features such as breakpoints or stepping through the graph. If you have any suggestions or feedback, please let us know.
