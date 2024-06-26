@@ -34,7 +34,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          exclude: ['**/98-advanced-guides/**'],
+          exclude: ['**/98-advanced-guides/**', '**/7-guides/**'],
           editUrl: 'https://github.com/tiwater/luban-docs/edit/main/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
@@ -77,10 +77,10 @@ const config: Config = {
           to: '/docs/category/ai',
           label: 'AI',
         },
-        {
-          to: '/docs/category/guides',
-          label: 'Guides',
-        },
+        // {
+        //   to: '/docs/category/guides',
+        //   label: 'Guides',
+        // },
         {
           to: '/docs/category/reference',
           label: 'Reference',
