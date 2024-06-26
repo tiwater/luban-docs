@@ -32,13 +32,5 @@ slug: brain
 | **Knowledge Base** | text | Knowledge base to query |
 | **Temperature** | number | Controls the randomness of the output content |
 | **Event Output** | boolean | If enabled, generated actions will be added to the event queue as events for rapid feedback. Otherwise, the LLM will complete its output and return the result as a whole. |
-| **Event Queue** | text | Variable name of the event queue. The format for action events is:   
-&#123;  
-"name":"ACTION",  
-"timestamp": number,  
-"parameters":&#123;  
-PARAMETERS_DEPENDS_ON_ACTION  
-&#125;&#125;.  
-The timestamp is the time when the request was initiated. Therefore, events generated within a single request will have the same timestamp.  
- |
+| **Event Queue** | text | Variable name of the event queue. The format for action events is:  &#123; "name":"ACTION", "timestamp": number, "parameters":&#123; PARAMETERS_DEPENDS_ON_ACTION &#125;&#125;. The timestamp is the time when the request was initiated. Therefore, events generated within a single request will have the same timestamp.  |
 | **NodeLogic** | any | Node logic |

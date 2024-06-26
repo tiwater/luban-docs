@@ -1,3 +1,4 @@
+# Adjusting the script to replace all newline characters with spaces to keep content in a single line
 import json
 import os
 import shutil
@@ -33,7 +34,7 @@ with open(static_category_json_path, 'w', encoding='utf-8') as json_file:
 
 # Function to escape necessary characters for markdown
 def escape_markdown_chars(text):
-    return text.replace('{{', '&#123;&#123;').replace('}}', '&#125;&#125;').replace('{', '&#123;').replace('}', '&#125;').replace('\n', '  \n').replace('`', '\\`').replace('|', '\\|')
+    return text.replace('{{', '&#123;&#123;').replace('}}', '&#125;&#125;').replace('{', '&#123;').replace('}', '&#125;').replace('\n', ' ').replace('`', '\\`').replace('|', '\\|')
 
 # Function to generate MDX content for a node
 def generate_mdx_content(node, slug):
@@ -48,7 +49,7 @@ def generate_mdx_content(node, slug):
         for input in node['template']['inputs']:
             input_type = input.get('type', 'Unknown')
             mdx_content += f"| **{escape_markdown_chars(input['name'])}** | {escape_markdown_chars(input_type)} | {escape_markdown_chars(input['description'])} |\n"
-
+    
     if 'outputs' in node['template']:
         mdx_content += "## Outputs\n\n"
         mdx_content += "| Name | Type | Description |\n| --- | --- | --- |\n"
@@ -56,13 +57,13 @@ def generate_mdx_content(node, slug):
             output_type = output.get('type', 'Unknown')
             description = escape_markdown_chars(output['description'])
             mdx_content += f"| **{escape_markdown_chars(output['name'])}** | {escape_markdown_chars(output_type)} | {description} |\n"
-
+    
     if 'options' in node['template']:
         mdx_content += "## Options\n\n"
         mdx_content += "| Name | Type | Description |\n| --- | --- | --- |\n"
         for option in node['template']['options']:
             option_type = option.get('type', 'Unknown')
-            description = escape_markdown_chars(option.get('description', 'No description provided'))
+            description = escape_markdown_chars(option.get('description', ''))
             mdx_content += f"| **{escape_markdown_chars(option['name'])}** | {escape_markdown_chars(option_type)} | {description} |\n"
 
     return mdx_content
@@ -101,3 +102,4 @@ for category, nodes in nodes_by_category.items():
             mdx_file.write(mdx_content)
 
 print(f"MDX files and _category_.json files have been generated in {output_dir}")
+
