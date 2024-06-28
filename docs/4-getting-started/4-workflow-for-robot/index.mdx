@@ -21,7 +21,7 @@ The workflow consists of the following steps:
 2. **Edit Project Description**: Click the pop-up menu at the bottom of the editing area, select `Edit Description`, and customize the project description as needed.
 ![Edit Description](edit-description.png)
 3. **Add Nodes**: Follow the steps below to add the corresponding nodes to the workflow and configure them as necessary:
-     1. **Initialization**：
+     1. **Initialization**：Add the nodes below:
          - **Humanoid Robot Node** (Robot Control): Represents the robot entity, configuring the robot's IP for control.
          - **Boolean Input Node** (Input & Output): Determines whether the workflow runs on the real robot or in simulation.
            - Select the Boolean Input Node, press the `Configure the node` button in the Property Pane, change the `Instance id` to `simulationControl`, and click `Confirm` button.
@@ -39,8 +39,10 @@ The workflow consists of the following steps:
          - Connect the pink endpoints of the Boolean Input Node (simulationControl) and the If Node to pass the simulationControl boolean value as an input for conditional judgment.
         The current workflow should resemble the diagram below:
 ![Workflow phase 1](phase-1.png)
-     2. **Trigger**：
-         - **Configure Variables**: Click the pop-up menu at the bottom of the editing area, select `Define variables`, input `events`, and click the `+` button, creating a variable for event queue. Then input `event` and click the `+` button, which will hold the current event being processed.
+     2. **Configure Variables**:
+         - Click the pop-up menu at the bottom of the editing area, select `Define variables`, input `events`, and click the `+` button, creating a variable for event queue. 
+         - Then input `event` and click the `+` button, which will hold the current event being processed.
+     3. **Trigger**: Add the nodes below:
          - **Let Node** (Programming): Assigns a value to a variable. In the Property Pane, select `events` in the `Variable` field and input `[]` in the `Value` field to initialize events as an empty array.
 ![Let](let.png)
          - **ASR Node** (Interaction): Automatic Speech Recognition converts speech to text, triggering robot actions. Add the following nodes to the ASR block:
@@ -48,7 +50,7 @@ The workflow consists of the following steps:
              - **Add Array Element Node** (Programming): Adds elements to the array. Input `events` in the `Input Array` field to append the received object to the end of events.
          - Connect the Let, ASR, For Each, and Add Array Element nodes sequentially using the same color input-output ports, as shown below:
 ![ASR](asr.png)
-     3. **Main Message Loop**:
+     4. **Main Message Loop**:
          - **While Node** (Logic Control): Select the While Node, input `true` in the `Condition` field of the Property Pane to create an infinite loop for the main message loop.
 ![While Loop](while-true.png)
             Add the following nodes to the While block:
@@ -73,13 +75,13 @@ The workflow consists of the following steps:
                  - **Stand Node** (Robot Control): Commands the robot to stand.
                  - Connect the nodes as illustrated below:
 ![Event Loop 3](event-loop-3.png)
-     4. **Simulation Trigger**：
+     5. **Simulation Trigger**：
          - To test robot movements in the simulation since ASR Node cannot run in a simulated environment, let's simulate the trigger condition. Add the following nodes to the workflow:
          - **If Node** (Logic Control): Add the following nodes to the True block of the If Node:
            - **Let Node** (Programming): Assigns values to variables. In the Property Pane, select `events` in the `Variable` field and input `[{"name":"asr","parameters":{"text":"Hi, nice to meet you!"}}]` in the `Value` field to simulate ASR detecting human conversation.
-     5. **Final Assembly**:
-         - Connect the node groups in approximately the following sequence: 1 -> 2 -> 4 -> 3 using brown Trigger connections.
-         - Note: Connect the If block of the forth group to the Let Node of the second group; connect the pink input port of the If Node in the forth group to the output port of the Boolean Input in the first group. The final setup should look like this:
+     6. **Final Assembly**:
+         - Connect the node groups created in previous steps in approximately the following sequence: i -> iii -> iv -> v using brown Trigger connections.
+         - Note: Connect the If block of the group v to the Let Node of the group iii; connect the pink input port of the If Node in the group v to the output port of the Boolean Input in the group i. The final setup should look like this:
 ![Complete](complete.png)
 
 ## Test Workflow with Simulation
