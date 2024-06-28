@@ -6,20 +6,20 @@ sidebar_position: 5
 
 We have successfully built a workflow that controls the robot to move forward and backward, and tested it in the simulation environment. In this section, we will deploy the workflow to the robot and run it in the production environment.
 
-## Deploy Workflow
+## Run Workflow
 
-To deploy the workflow to the robot, follow these steps:
+To run the workflow on the robot, follow these steps:
 
-1. **Save Workflow**: Click the `Save` button to save the workflow.
-2. **Deploy Workflow**: Click the `Deploy` button to deploy the workflow to the robot. The workflow will be uploaded to the robot and stored in its memory.
+1. **Prepare the Network**: According to the robot’s manual, connect the robot to a Wi-Fi network with Internet access. Ensure the robot’s hotspot (e.g., gr1p24ja0027, refer to the robot’s serial number) is enabled and can connect to the Internet.
+2. **Initialize the Robot**: Follow the robot’s manual to initialize the limbs using pad or other tools, and ensure the robot is standing steadily on the ground.
+3. **Access Fourier Builder**: Connect your computer to the robot’s hotspot and access http://192.168.12.1:3000 via a browser to open the robot’s local Fourier Builder.
+4. **Sync Workflow**: Log into Fourier Builder using your previously registered account. After a short wait, your previously created projects will sync to the robot. Select the project you want to execute from "My Projects". If you cannot access the Internet for security or technical reasons, you won’t be able to sync cloud workflows, and you will have to create and run workflows locally. Many cloud-dependent features will also be unavailable.
+5. **Run Workflow**: Click the `Run` button to run the workflow on the robot. The robot will start working as expected.
 
-## Run Workflow on Robot
+## Deploy Workflow to Robot
 
-After deploying the workflow to the robot, you can run it in the production environment. Follow these steps to run the workflow on the robot:
+`Run` the workflow on the robot is a one-time action—the robot will forget the executed program after it finishes. To make the workflow run permanently on the robot, you need to deploy it. Follow these steps to deploy the workflow to the robot:
 
-1. **Connect to Robot**: Make sure the robot is connected to the network and accessible from Fourier Builder.
-2. **Run Workflow**: Click the `Run` button to run the workflow on the robot. The robot will start moving forward and backward as expected.
-
-## Monitor the Workflow
-
-While the workflow is running on the robot, you can monitor its progress and status from Fourier Builder. The `Simulation Pane` displays the robot's movements in real-time, allowing you to see how the robot is performing the tasks.
+1. Perform steps 1-5 as in the previous section.
+2. **Deploy Workflow**: Click the `Deploy` button to upload and store the workflow in the robot’s memory.
+3. **Run Workflow**: Open the graphical programming interface on the pad, where you can see all the deployed projects on the robot. Click the Start button next to the project you wish to execute to run the workflow. You can thereafter use the pad to run deployed workflows on the robot.
